@@ -1,0 +1,13 @@
+{
+    "app": {
+        "port": 8000
+    },
+    "mysql": {
+        "host": "54.251.88.108",
+        "port": 3306,
+        "username": "acoki",
+        "password": "acoki123456",
+        "dbName": "r"
+    }
+}
+
