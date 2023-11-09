@@ -96,6 +96,17 @@ export async function getDataByAddress(req, res) {
         }
     })
     console.log("inviter_token_amount", parseInt(Number(inviter_token_amount) * 0.1) )
+
+    res.send({
+        msg: "Success",
+        code: 1,
+        data: {
+            btc_amount: btc_amount,
+            token_amount: token_amount,
+            inviter_btc_amount: inviter_btc_amount,
+            inviter_token_amount: inviter_token_amount
+        }
+    });
 }
 
 export async function getFloorDataByAddress(req, res) {

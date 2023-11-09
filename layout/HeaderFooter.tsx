@@ -9,8 +9,8 @@ const HeaderFooter = (props:any) => {
 
   return (
     <div>
-       <header>
-          <div className=' flex flex-row justify-between p-4'>
+       <header className=' fixed left-0 right-0 top-0 z-50'>
+          <div className='flex flex-row justify-center font-[digitalists]'>
             <Header/>
           </div>
         </header>

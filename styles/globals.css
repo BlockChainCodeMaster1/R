@@ -16,15 +16,22 @@
   }
 }
 
-/* @font-face {
-  font-family: GT-America-Regular;
-  src: url(../public/fonts/GT-America-Regular.OTF) format("truetype");
+@font-face {
+  font-family: digitalists;
+  src: url(../public/font/digitalists.ttf) format("truetype");
   font-weight: 400;
   font-style: normal
-} */
+}
+
+@font-face {
+  font-family: Menlo;
+  src: url(../public/font/Menlo.ttc) format("truetype");
+  font-weight: 400;
+  font-style: normal
+}
 
 body {
-  /* font-family: GT-America-Regular; */
+  font-family: Menlo;
   color: rgb(var(--foreground-rgb));
 }
 
