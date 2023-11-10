@@ -17,6 +17,9 @@ export default function Home() {
             <p className=" border-l-4 border-[#FF0000] pl-4 ml-0 sm:ml-48 mt-14 text-xs w-12/12 sm:w-8/12 relative leading-4">
             <i className=" w-60 h-8 bg-[url('/slogan_tips.png')] bg-no-repeat bg-right-top bg-[length:100%_auto] absolute sm:-right-24 right-0 -top-8"></i>
               The process of entropy increase is a spontaneous progression from order to disorder (Bortz, 1986; Roth, 1993). Thermodynamic definition: As entropy increases, the total energy of the system remains unchanged, but the available portion decreases The law of entropy increase tells us that all things in the universe follow the law of entropy increase, and anything in order, without the action of external forces, must move towards disorder.</p>
+              <p className=" text-center py-4">
+                <Link href="/launch"><button className="cursor-pointer bg-[#FF0000]  my-4 px-14 py-3 text-xs sm:text-base drop-shadow-[0_5px_5px_rgba(255,0,0,0.75)]">Launch</button></Link>
+              </p>
           </div>
           <div className="bg-[url('/slogan_cover.png')] bg-no-repeat absolute top-0 left-0 right-0 bottom-0 bg-top bg-[length:80%_auto] -z-10 animate-pulse"></div>
           <video
