@@ -25,7 +25,6 @@ export default function Home() {
             loop
             muted
             playsInline
-            poster="/cover.png"
           >
             <source src="/bg.mp4" type="video/mp4" />
           </video>
@@ -41,8 +40,9 @@ export default function Home() {
                 className="absolute top-0 -z-20 object-cover w-full h-full "
                 playsInline
                 controls
+                poster="/cover.png"
               >
-                <source src="/bg.mp4" type="video/mp4" />
+                <source src="/r.mp4" type="video/mp4" />
               </video>
             </div>
           </div>

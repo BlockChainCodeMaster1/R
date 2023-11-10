@@ -83,7 +83,7 @@ export default function Header() {
         <ul
           className=" justify-start sm:justify-center items-center gap-4 text-basic bg-[#02000b] bg-opacity-30 sm:bg-transparent bottom-0 z-50 
       sm:bg-opacity-100 text-white flex fixed right-0 top-0 sm:relative flex-col sm:flex-row backdrop-blur-sm  w-full
-      sm:backdrop-blur-none p-4 sm:p-0 overflow-hidden bg-[url('/header_bg.png')] bg-no-repeat bg-[length:auto_100%]  bg-bottom text-center"
+      sm:backdrop-blur-none p-4 sm:p-0 overflow-hidden bg-[url('/header_bg.png')] bg-no-repeat bg-[length:100%_100%]  bg-bottom text-center"
         >
           {leftNav.map((el, index) => (
             <Link key={index} href={el.href}>
@@ -92,7 +92,7 @@ export default function Header() {
               </li>
             </Link>
           ))}
-          <li className="pt-2 pb-7 animate-pulse"><img src="/logo.png" className=" w-16 object-contain" /></li>
+          <li className="pt-2 pb-6 animate-pulse"><img src="/logo.png" className=" w-16 object-contain" /></li>
           {rightNav.map((el, index) => (
             <Link key={index} href={el.href}>
               <li className="leading-none border-opacity-30 w-24 h-14  hover:text-[#ff0000]">

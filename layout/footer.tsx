@@ -3,8 +3,8 @@ export default function Footer() {
     <footer className=" text-center">
         <div className="font-[digitalists] inline-flex bg-[#ff0000] px-4 py-2 rounded-full gap-2 text-white items-center">
           <div>Social</div>
-          <img src="/icon_tw.png" className=" w-4 sm:w-8 object-fill cursor-pointer " />
-          <img src="/icon_tg.png" className=" w-4 sm:w-8 object-fill cursor-pointer" />
+          <a target="_blank" href="https://twitter.com/RevsBtc"><img src="/icon_tw.png" className=" w-4 sm:w-8 object-fill cursor-pointer " /></a>
+          <a target="_blank" href="https://t.me/REVS_official"><img src="/icon_tg.png" className=" w-4 sm:w-8 object-fill cursor-pointer" /></a>
           {/* <div className="bg-[url('/icon_tg.png)] w-40 h-6 bg-no-repeat bg-center"></div>
           <div className="bg-[url('/icon_tw.png)] w-12 h-6 bg-no-repeat bg-center"></div> */}
         </div>
