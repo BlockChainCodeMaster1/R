@@ -29,6 +29,16 @@ export async function getTotalData(req, res) {
 
 export async function getRank(req, res) {
 
+    const { date } = req.params;
+
+    if (!date ) {
+        res.send({
+        msg: "Incomplete parameter",
+        code: 0,
+        });
+        return;
+    }
+
     const rank = await IEO.findAll({
         attributes: [
             'invite_address',
@@ -41,7 +51,10 @@ export async function getRank(req, res) {
         limit : 10,
         where: {
             invite_address: {
-                [Op.ne] : "01"
+                [Op.ne] : "01",
+            },
+            date: {
+                [Op.lte]: date,
             }
         }
     })
