@@ -24,15 +24,15 @@ export default function Header() {
       href: "/",
     },
     {
-      name: "Raise",
+      name: "Launch",
       href: "/",
     }
   ]);
 
   const [rightNav, setRightNav] = useState([
     {
-      name: "Launch",
-      href: "/launch",
+      name: "Stake",
+      href: "/",
     },
     {
       name: "Docs",
