@@ -61,7 +61,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <div className=" bg-[url('/tokenomics_bg.png')] bg-no-repeat bg-center bg-cover py-10 sm:py-32 sm:w-11/12">
+        <div className=" bg-[url('/tokenomics_bg.png')] bg-no-repeat bg-center bg-cover py-10 sm:py-32 sm:w-11/12 mx-auto">
           <h1><img src="/token_title.png" className=" w-10/12 sm:w-4/12 mx-auto" /></h1>
           <p className=" text-center font-[digitalists] text-base sm:text-2xl text-[#ff0000] py-4 sm:py-10">REVS - 210000000 pieces</p>
           <img src="/tokenomics.png" className=" w-12/12 sm:w-8/12 mx-auto" />
