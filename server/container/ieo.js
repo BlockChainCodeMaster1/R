@@ -110,6 +110,18 @@ export async function getDataByAddress(req, res) {
     })
     console.log("inviter_token_amount", parseInt(Number(inviter_token_amount) * 0.1) )
 
+    const inviter = await IEO.findAll({
+        attributes: [
+            'invite_address',
+          ],
+        where: {
+            invite_address: address
+        }
+    })
+
+    let arr = inviter.map((el,index)=>el.invite_address)
+    const inviter_count = Array.from(new Set(arr))
+
     res.send({
         msg: "Success",
         code: 1,
@@ -117,7 +129,8 @@ export async function getDataByAddress(req, res) {
             btc_amount: btc_amount,
             token_amount: token_amount,
             inviter_btc_amount: inviter_btc_amount,
-            inviter_token_amount: inviter_token_amount
+            inviter_token_amount: inviter_token_amount,
+            invite_count: inviter_count.length
         }
     });
 }

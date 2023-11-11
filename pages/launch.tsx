@@ -5,6 +5,21 @@ import { Autoplay, EffectCards, Thumbs, EffectCreative } from "swiper/modules";
 import "swiper/css";
 import Link from "next/link";
 import { getTotalData, getRank, getDataByAddress } from "../api";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { toast } from 'react-toastify';
+
+const config:Object = 
+{
+  position: "bottom-left",
+  autoClose: 3000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: "dark",
+  }
+
 
 export default function Home() {
   const [totalData, setTotalData] = useState({
@@ -15,10 +30,12 @@ export default function Home() {
     btc_amount: 0,
     token_amount: 0,
     inviter_btc_amount: 0,
-    inviter_token_amount: 0
+    inviter_token_amount: 0,
+    invite_count: 0
   })
   const [rankData, setRankData] = useState([]);
   const [rankDate, setRankDate] = useState("1699718400");
+  const [account, setAccount] = useState("")
   const startTime = 1699718400000;
 
   const formatAddress = (address: string) => {
@@ -35,6 +52,9 @@ export default function Home() {
       const { data: rankDatas } = await getRank(rankDate);
       console.log("rankData", rankDatas);
       setRankData(rankDatas.rank);
+      !!(window as any).account && setAccount((window as any).account)
+      let unisatBalance = await (window as any).unisat.getBalance();
+    //   let unisatBalance = await (window as any).unisat.getBalance();
       if ((window as any).account) {
         const { data: myData } = await getDataByAddress((window as any).account);
         console.log("getDataByAddress", myData)
@@ -65,7 +85,7 @@ export default function Home() {
               <h1 className="font-[digitalists] text-[#ff0000] py-2 text-sm sm:text-base">
                 Total fundraising amount
               </h1>
-              <p className=" text-5xl sm:text-7xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500">
+              <p className=" text-5xl sm:text-7xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500  tracking-normal">
                 {totalData.btc_amount} <span className=" text-4xl">BTC</span>
               </p>
             </li>
@@ -73,7 +93,7 @@ export default function Home() {
               <h1 className="font-[digitalists] text-[#ff0000]  py-2 text-sm sm:text-base">
                 Total fundraising amount
               </h1>
-              <p className="text-5xl sm:text-7xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500">
+              <p className="text-5xl sm:text-7xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500 tracking-normal">
                 {totalData.users_conunt}
               </p>
             </li>
@@ -85,10 +105,10 @@ export default function Home() {
               <ul className=" sm:text-left flex gap-8 sm:flex-row flex-col  text-center">
                 <li className="font-[digitalists] ">
                   <h1>Exchange ratio</h1>
-                  <p className=" text-2xl pb-4">1 BTC = {30000 - (Math.floor(totalData.btc_amount/2)*10)} <span className=" text-[#ff0000] text-base">REVS</span></p>
+                  <p className=" text-2xl pb-4">1 <span className=" text-[#ff7700] text-base">₿</span> = {30000 - (Math.floor(totalData.btc_amount/2)*10)} <span className=" text-[#ff0000] text-base">REVS</span></p>
                   <h1>My total investment</h1>
                   <p className=" text-2xl  pb-4">{myData.btc_amount} <span className=" text-[#ff7700] text-base">₿</span></p>
-                  <h1>Number of tokens available</h1>
+                  <h1>Tokens available</h1>
                   <p className=" text-2xl  pb-4">{myData.token_amount} <span className=" text-[#ff0000] text-base">REVS</span></p>
                 </li>
                 <li className=" relative w-62 h-28 mt-0 sm:mt-10 mb-10 sm:mb-0 flex justify-center sm:block ">
@@ -153,7 +173,7 @@ export default function Home() {
               </p>
               <p className="font-[digitalists] flex justify-between text-base  pt-4 sm:pt-10 ">
                 <span>Total number of invited friends</span>
-                <span>12</span>
+                <span>{myData.invite_count}</span>
               </p>
               <p className="flex gap-2 pt-4 sm:pt-10 ">
                 <button className=" text-xs text-[#ff0000] border border-[#ff0000] w-1/2 py-4 border-l-4 uppercase">
@@ -168,14 +188,18 @@ export default function Home() {
               </p>
               <p className=" relative">
                 <input
-
-                  value={`https://revs.global/?invite=`}
+                  value={`https://revs.network/?invite=${account}`}
                   type="text"
                   className="border border-[#FF0000] bg-transparent w-full my-4 text-xs sm:text-base outline-none p-4"
                 />
-                <button className=" absolute bg-[#ff0000] cursor-pointer right-2 top-6 px-6 py-2 text-xs sm:text-base">
-                  COPY
-                </button>
+                 <CopyToClipboard
+                  text={`https://revs.network/?invite=${account}`}
+                  onCopy={() => toast('🚀 Copy success!', config)}
+                >
+                    <button className=" absolute bg-[#ff0000] cursor-pointer right-2 top-6 px-6 py-2 text-xs sm:text-base">
+                    COPY
+                    </button>
+                </CopyToClipboard>
               </p>
             </div>
           </div>
@@ -223,7 +247,7 @@ export default function Home() {
                         <p className="text-xs sm:text-base">Invite fundraising together</p>
                       </div>
                     </div>
-                    <span className=" text-3xl sm:text-5xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500">
+                    <span className=" text-3xl sm:text-5xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500  tracking-normal">
                       {el["amount"]}
                     </span>
                   </li>
