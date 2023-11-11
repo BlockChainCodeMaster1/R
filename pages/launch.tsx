@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectCards, Thumbs, EffectCreative } from "swiper/modules";
 import "swiper/css";
 import Link from "next/link";
-import { getTotalData, getRank, getDataByAddress } from "../api";
+import { getTotalData, getRank, getDataByAddress, getFloorDataByAddress, getInviteDataByAddress } from "../api";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { toast } from 'react-toastify';
 
@@ -36,6 +36,12 @@ export default function Home() {
   const [rankData, setRankData] = useState([]);
   const [rankDate, setRankDate] = useState("1699718400");
   const [account, setAccount] = useState("")
+  const [myDataList, setMyDataList] = useState([])
+  const [showMyDataList, setShowMyDataList] = useState(false)
+
+  const [myInviteDataList, setMyInviteDataList] = useState([])
+  const [showMyInviteDataList, setShowInviteMyDataList] = useState(false)
+
   const startTime = 1699718400000;
 
   const formatAddress = (address: string) => {
@@ -64,8 +70,68 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
+  const getMyDataList = async() => {
+    if(!!account){
+      setShowMyDataList(true)
+      const {data:myDataList} = await getFloorDataByAddress(account)
+      console.log("myDataList", myDataList)
+      setMyDataList(myDataList)
+    }else{
+      toast('💰 Please Connect wallet', config);
+    }
+  }
+
+  const getMyInviteDataList = async() => {
+    if(!!account){
+      setShowInviteMyDataList(true)
+      const {data:myInviteDataList} = await getInviteDataByAddress(account)
+      console.log("myInviteDataList", myInviteDataList)
+      setMyInviteDataList(myInviteDataList)
+    }else{
+      toast('💰 Please Connect wallet', config);
+    }
+  }
+
   return (
     <HeaderFooter>
+      {showMyDataList && 
+      <div className=" fixed border border-[#ff0000] z-30 w-4/12 p-4 bg-black bg-opacity-90 left-1/2 top-1/2 -ml-60 -mt-48 min-h-[20rem] overflow-auto">
+        <h1 className=" text-center text-[#ff0000] flex justify-between pb-4">
+          <span>View your own data</span>
+          <span className=" cursor-pointer" onClick={()=>setShowMyDataList(false)}>X</span>
+        </h1>
+        <ul>
+            {myDataList.map((el,index)=><li className=" flex justify-between p-2 border-b border-[#ff0000] items-center">
+                <span className="text-base">
+                    <h1>{formatAddress(el['address'])}</h1>
+                    <p>{new Date(Number(el['date'])).toISOString()}</p>
+                </span>
+                <span className=" text-xl sm:text-xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500  tracking-normal">
+                    <p>{el['btc_amount']} <span className="text-xl">btc</span></p>
+                    <p>{el['token_amount']} <span className="text-xl">revs</span></p>
+                </span>
+            </li>)}
+        </ul>
+      </div>}
+      {showMyInviteDataList && 
+      <div className=" fixed border border-[#ff0000] z-30 w-4/12 p-4 bg-black bg-opacity-90 left-1/2 top-1/2 -ml-60 -mt-48 min-h-[20rem] overflow-auto">
+        <h1 className=" text-center text-[#ff0000] flex justify-between pb-4">
+          <span>View your own data</span>
+          <span className=" cursor-pointer" onClick={()=>setShowInviteMyDataList(false)}>X</span>
+        </h1>
+        <ul>
+            { myInviteDataList.map((el,index)=><li className=" flex justify-between p-2 border-b border-[#ff0000] items-center">
+                <span className="text-base">
+                    <h1>{formatAddress(el['address'])}</h1>
+                    <p>{new Date(Number(el['date'])).toISOString()}</p>
+                </span>
+                <span className=" text-xl sm:text-xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500  tracking-normal">
+                    <p>{el['btc_amount']} <span className="text-xl">btc</span></p>
+                    <p>{el['token_amount']} <span className="text-xl">revs</span></p>
+                </span>
+            </li>)}
+        </ul>
+      </div>}
       <main className="text-white   bg-no-repeat bg-top_center text-center bg-[length:100%_auto] pb-20">
         <video
           className="fixed top-0 -z-20 object-cover w-full h-full opacity-70"
@@ -146,6 +212,7 @@ export default function Home() {
               <p className=" relative">
                 <input
                   type="text"
+                  defaultValue={0}
                   className="border border-[#FF0000] bg-transparent w-full my-4 text-base outline-none p-4"
                 />
                 <button className=" absolute bg-[#ff0000] cursor-pointer right-2 top-7 sm:top-6 px-6 py-2 text-xs sm:text-base">
@@ -176,11 +243,11 @@ export default function Home() {
                 <span>{myData.invite_count}</span>
               </p>
               <p className="flex gap-2 pt-4 sm:pt-10 ">
-                <button className=" text-xs text-[#ff0000] border border-[#ff0000] w-1/2 py-4 border-l-4 uppercase">
-                  View your invitation data
-                </button>
-                <button className="text-xs text-[#ff0000] border border-[#ff0000] w-1/2 py-4 border-l-4 uppercase">
+                <button onClick={()=>getMyDataList()} className=" text-xs text-[#ff0000] border border-[#ff0000] w-1/2 py-4 border-l-4 uppercase">
                   View your own data
+                </button>
+                <button onClick={()=>getMyInviteDataList()} className="text-xs text-[#ff0000] border border-[#ff0000] w-1/2 py-4 border-l-4 uppercase">
+                  View your invitation data
                 </button>
               </p>
               <p className="font-[digitalists] flex justify-between text-base mt-4">

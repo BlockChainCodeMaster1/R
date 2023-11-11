@@ -158,7 +158,7 @@ export async function getFloorDataByAddress(req, res) {
     if (floorData) {
         res.send({
         msg: "Success",
-        floorData: floorData,
+        data: floorData,
         code: 1,
         });
     } else {
@@ -193,7 +193,7 @@ export async function getInviteDataByAddress(req, res) {
     if (floorData) {
         res.send({
         msg: "Success",
-        floorData: floorData,
+        data: floorData,
         code: 1,
         });
     } else {

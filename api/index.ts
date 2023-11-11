@@ -22,16 +22,40 @@ export const getRank = async (date: String) => {
   }
 }
 
-export const getDataByAddress = async (date: String) => {
+export const getDataByAddress = async (address: String) => {
   try {
       const {
           data
-      } = await axios.get(`/api/getDataByAddress/`+date)
+      } = await axios.get(`/api/getDataByAddress/`+address)
       return data
   } catch (error) {
       console.log(error)
   }
 }
+
+export const getFloorDataByAddress = async (address: String) => {
+  try {
+      const {
+          data
+      } = await axios.get(`/api/getFloorDataByAddress/`+address)
+      return data
+  } catch (error) {
+      console.log(error)
+  }
+}
+
+export const getInviteDataByAddress = async (address: String) => {
+  try {
+      const {
+          data
+      } = await axios.get(`/api/getInviteDataByAddress/`+address)
+      return data
+  } catch (error) {
+      console.log(error)
+  }
+}
+
+
 
 export const createPublicRelationship = async (
   from: String,
