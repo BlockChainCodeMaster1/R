@@ -10,6 +10,7 @@ export default function Home() {
   return (
     <HeaderFooter>
       <main className="text-white">
+
         <div className=" relative pt-20">
           <div className=" sm:w-8/12 w-11/12 mx-auto py-20">
             <h1><img src="/slogan.png"  className=" sm:w-6/12 w-12/12" /></h1>

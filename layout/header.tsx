@@ -25,18 +25,18 @@ export default function Header() {
     },
     {
       name: "Raise",
-      href: "/#data",
+      href: "/",
     }
   ]);
 
   const [rightNav, setRightNav] = useState([
     {
       name: "Launch",
-      href: "/#IEO",
+      href: "/launch",
     },
     {
       name: "Docs",
-      href: "/#IEO",
+      href: "/",
     }
   ]);
 
@@ -49,9 +49,11 @@ export default function Header() {
         navigator.userAgent
       )
     ) {
+      setIsMobile(true);
       setShowNav(false);
     } else {
       setShowNav(true);
+      setIsMobile(false);
     }
   }, []);
 
@@ -97,9 +99,9 @@ export default function Header() {
 
   return (
     <>
-    {isMobile && (
+    {showNav && (
         <div
-          className=" bg-[#02000b] bg-opacity-30  fixed left-0 right-0 top-0 bottom-0 z-40"
+          className=" bg-[#02000b] bg-opacity-50  fixed left-0 right-0 top-0 bottom-0 z-40"
           onClick={() => {
             setShowNav(false);
             setIsMobile(false);
@@ -108,13 +110,13 @@ export default function Header() {
       )}
       {showNav && (
         <ul
-          className=" justify-start sm:justify-center items-center gap-4 text-basic bg-[#02000b] bg-opacity-30 sm:bg-transparent bottom-0 z-50 
-      sm:bg-opacity-100 text-white flex fixed right-0 top-0 sm:relative flex-col sm:flex-row backdrop-blur-sm  w-full
-      sm:backdrop-blur-none p-4 sm:p-0 overflow-hidden bg-[url('/header_bg.png')] bg-no-repeat bg-[length:100%_100%]  bg-bottom text-center"
+          className=" justify-start sm:justify-center items-center gap-4 text-basic bg-[#02000b] bg-opacity-80 sm:bg-opacity-30 sm:bg-transparent bottom-0 z-50 
+      sm:bg-opacity-100 text-white flex fixed left-0 top-0 sm:relative flex-col sm:flex-row backdrop-blur-sm  w-1/2
+      sm:backdrop-blur-none p-4 sm:p-0 overflow-hidden bg-none sm:bg-[url('/header_bg.png')] bg-no-repeat bg-[length:100%_100%]  bg-bottom text-center"
         >
           {leftNav.map((el, index) => (
             <Link key={index} href={el.href}>
-              <li className="leading-none border-opacity-30  w-24 h-14 hover:text-[#ff0000]">
+              <li className="leading-none border-opacity-30  w-24 h-6 sm:h-14 hover:text-[#ff0000]">
                 {el.name}
               </li>
             </Link>
@@ -122,29 +124,42 @@ export default function Header() {
           <li className="pt-2 pb-6 animate-pulse"><img src="/logo.png" className=" w-16 object-contain" /></li>
           {rightNav.map((el, index) => (
             <Link key={index} href={el.href}>
-              <li className="leading-none border-opacity-30 w-24 h-14  hover:text-[#ff0000]">
+              <li className="leading-none border-opacity-30 w-24 h-6 sm:h-14  hover:text-[#ff0000]">
                 {el.name}
               </li>
             </Link>
           ))}
         </ul>
       )}
-        <div onClick={()=>{ setShowDialog(true) }} className="cursor-pointer absolute z-50 top-4 right-10 bg-[#FF0000] px-4 py-2 text-xs sm:text-base text-white">
+        <div onClick={()=>{ setShowDialog(true) }} className="cursor-pointer absolute z-30 top-4 right-10 bg-[#FF0000] px-4 py-2 text-xs sm:text-base text-white">
           {account == "" ? "// Connect Wattle //" : formatAddress((window as any).account) }
         </div>
-        {showDialog && <div className="fixed left-0 top-0 right-0 bottom-0 bg-black bg-opacity-50 justify-center items-center z-50 text-white">
-            <ul className=" bg-[url('/ieo_border.png')] bg-no-repeat bg-[length:100%_100%] -ml-48 -mt-32 px-10 py-14 w-3/12 flex gap-10 absolute left-1/2 top-1/2 justify-center">
+        {showDialog && <div className="fixed left-0 top-0 right-0 bottom-0 bg-black bg-opacity-50 justify-center items-center z-50 text-white"
+          onClick={()=>setShowDialog(false)}
+        >
+            <ul className=" bg-[url('/ieo_border.png')] bg-no-repeat bg-[length:100%_100%]  sm:-ml-48 -mt-32 px-10 py-14 w-9/12 sm:w-3/12 flex gap-10 relative mx-auto sm:absolute sm:left-1/2 left-0 top-1/2 justify-center">
               <li className=" cursor-pointer" onClick={() => connectUnisatWallet()}>
                 <img src="/unisat.png" className=" w-12 m-auto" />
-                <p className=" py-4">UniSat Wallet</p>
+                <p className=" py-4 text-xs sm:text-base">UniSat Wallet</p>
               </li>
               <li className=" cursor-pointer" onClick={() => connectOKXWallet() }>
                 <img src="/okx.png" className=" w-12 m-auto"  />
-                <p className=" py-4">OKX Wallet</p>
+                <p className=" py-4 text-xs sm:text-base">OKX Wallet</p>
               </li>
             </ul> 
         </div>
         }
+        {!showNav && (
+        <i
+          className="block cursor-pointer text-[#ff0000] not-italic absolute left-4 top-4"
+          onClick={() => {
+            setShowNav(true);
+            setIsMobile(true);
+          }}
+        >
+          三
+        </i>
+      )}
     </>
   );
 }
