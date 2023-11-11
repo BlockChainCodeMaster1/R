@@ -101,7 +101,7 @@ export default function Header() {
     <>
     {isMobile && showNav && (
         <div
-          className=" bg-[#02000b] bg-opacity-50  fixed left-0 right-0 top-0 bottom-0 z-40"
+          className=" bg-[#02000b] bg-opacity-50  fixed left-0 right-0 top-0 bottom-0 z-20"
           onClick={() => {
             setShowNav(false);
             setIsMobile(false);
