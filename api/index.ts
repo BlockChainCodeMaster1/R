@@ -22,6 +22,17 @@ export const getRank = async (date: String) => {
   }
 }
 
+export const getDataByAddress = async (date: String) => {
+  try {
+      const {
+          data
+      } = await axios.get(`/api/getDataByAddress/`+date)
+      return data
+  } catch (error) {
+      console.log(error)
+  }
+}
+
 export const createPublicRelationship = async (
   from: String,
   signature: String,

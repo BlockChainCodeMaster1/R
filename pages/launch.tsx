@@ -4,13 +4,19 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectCards, Thumbs, EffectCreative } from "swiper/modules";
 import "swiper/css";
 import Link from "next/link";
-import { getTotalData, getRank } from "../api";
+import { getTotalData, getRank, getDataByAddress } from "../api";
 
 export default function Home() {
   const [totalData, setTotalData] = useState({
     btc_amount: 0,
     users_conunt: 0,
   });
+  const [myData, setMyData] = useState({
+    btc_amount: 0,
+    token_amount: 0,
+    inviter_btc_amount: 0,
+    inviter_token_amount: 0
+  })
   const [rankData, setRankData] = useState([]);
   const [rankDate, setRankDate] = useState("1699718400");
   const startTime = 1699718400000;
@@ -29,7 +35,10 @@ export default function Home() {
       const { data: rankDatas } = await getRank(rankDate);
       console.log("rankData", rankDatas);
       setRankData(rankDatas.rank);
-      if (1) {
+      if ((window as any).account) {
+        const { data: myData } = await getDataByAddress((window as any).account);
+        console.log("getDataByAddress", myData)
+        setMyData(myData)
       }
     }, 3000);
     return () => clearInterval(interval);
@@ -45,7 +54,7 @@ export default function Home() {
           muted
           playsInline
         >
-          <source src="/ieo_background2.mp4" type="video/mp4" />
+          <source src="/ieo_background.mp4" type="video/mp4" />
         </video>
         <div className="w-10/12 mx-auto pt-32">
           <h1 className="font-[digitalists] text-xl sm:text-2xl text-[#ff0000]">
@@ -76,16 +85,16 @@ export default function Home() {
               <ul className=" sm:text-left flex gap-8 sm:flex-row flex-col  text-center">
                 <li className="font-[digitalists] ">
                   <h1>Exchange ratio</h1>
-                  <p className=" text-2xl pb-4">1 BTC : 30000 REVS</p>
+                  <p className=" text-2xl pb-4">1 BTC = {30000 - (Math.floor(totalData.btc_amount/2)*10)} <span className=" text-[#ff0000] text-base">REVS</span></p>
                   <h1>My total investment</h1>
-                  <p className=" text-2xl  pb-4">30000 REVS</p>
+                  <p className=" text-2xl  pb-4">{myData.btc_amount} <span className=" text-[#ff7700] text-base">₿</span></p>
                   <h1>Number of tokens available</h1>
-                  <p className=" text-2xl  pb-4">30000 REVS</p>
+                  <p className=" text-2xl  pb-4">{myData.token_amount} <span className=" text-[#ff0000] text-base">REVS</span></p>
                 </li>
                 <li className=" relative w-62 h-28 mt-0 sm:mt-10 mb-10 sm:mb-0 flex justify-center sm:block ">
                     <div className="text-xs absolute top-8 sm:left-16 left-22 text-center z-30">
-                        <h1>2 Btc</h1>
-                        <p>(2/3000)floor</p>
+                        <h1>{totalData.btc_amount} Btc</h1>
+                        <p>({Math.ceil(totalData.btc_amount/2)}/3000)floor</p>
                     </div>
                     <div className=" absolute -bottom-4 sm:left-20 left-26 text-xs whitespace-nowrap ">
                     3000 floor
@@ -136,11 +145,15 @@ export default function Home() {
             <div className=" bg-[url('/ieo_border.png')] bg-no-repeat bg-[length:100%_100%] px-8 sm:px-12 py-8 mt-4">
               <p className="font-[digitalists] flex justify-between text-base">
                 <span>Number of invitees</span>
-                <span>100.00 REVS</span>
+                <span>{myData.inviter_btc_amount} BTC</span>
               </p>
               <p className="font-[digitalists] flex justify-between pt-4 sm:pt-10 text-base">
                 <span>fundraisers invited</span>
-                <span>100.00 REVS</span>
+                <span>{myData.inviter_token_amount} REVS</span>
+              </p>
+              <p className="font-[digitalists] flex justify-between text-base  pt-4 sm:pt-10 ">
+                <span>Total number of invited friends</span>
+                <span>12</span>
               </p>
               <p className="flex gap-2 pt-4 sm:pt-10 ">
                 <button className=" text-xs text-[#ff0000] border border-[#ff0000] w-1/2 py-4 border-l-4 uppercase">
@@ -149,12 +162,6 @@ export default function Home() {
                 <button className="text-xs text-[#ff0000] border border-[#ff0000] w-1/2 py-4 border-l-4 uppercase">
                   View your own data
                 </button>
-              </p>
-            </div>
-            <div className=" bg-[url('/ieo_border.png')] bg-no-repeat bg-[length:100%_100%] px-8 sm:px-12 py-8 mt-4">
-              <p className="font-[digitalists] flex justify-between text-base">
-                <span>Total number of invited friends</span>
-                <span>12</span>
               </p>
               <p className="font-[digitalists] flex justify-between text-base mt-4">
                 <span className=" text-[#ff0000]">Invitation Link</span>

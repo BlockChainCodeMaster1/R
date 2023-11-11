@@ -63,7 +63,7 @@ export default function Header() {
       try {
         setShowDialog(false)
         let accounts = await (window as any).unisat.requestAccounts();
-        (window as any).account = formatAddress(accounts[0])
+        (window as any).account = accounts[0]
         toast('🚀 Connect success!', config);
         setAccount((window as any).account)
         console.log(accounts);
@@ -81,7 +81,7 @@ export default function Header() {
         setShowDialog(false)
         let accounts = await (window as any).okxwallet.bitcoin.connect()
         toast('🚀 Connect success!', config);
-        (window as any).account = formatAddress(accounts['address'])
+        (window as any).account = accounts['address']
         setAccount((window as any).account)
         console.log(accounts);
       } catch (e) {
@@ -129,10 +129,10 @@ export default function Header() {
           ))}
         </ul>
       )}
-        <div onClick={()=>{ setShowDialog(true) }} className="cursor-pointer absolute z-50 top-4 right-10 bg-[#FF0000] px-4 py-2 text-xs sm:text-base">
-          {account == "" ? "// Connect Wattle //" : (window as any).account }
+        <div onClick={()=>{ setShowDialog(true) }} className="cursor-pointer absolute z-50 top-4 right-10 bg-[#FF0000] px-4 py-2 text-xs sm:text-base text-white">
+          {account == "" ? "// Connect Wattle //" : formatAddress((window as any).account) }
         </div>
-        {showDialog && <div className="fixed left-0 top-0 right-0 bottom-0 bg-black bg-opacity-50 justify-center items-center z-50">
+        {showDialog && <div className="fixed left-0 top-0 right-0 bottom-0 bg-black bg-opacity-50 justify-center items-center z-50 text-white">
             <ul className=" bg-[url('/ieo_border.png')] bg-no-repeat bg-[length:100%_100%] -ml-48 -mt-32 px-10 py-14 w-3/12 flex gap-10 absolute left-1/2 top-1/2 justify-center">
               <li className=" cursor-pointer" onClick={() => connectUnisatWallet()}>
                 <img src="/unisat.png" className=" w-12 m-auto" />
