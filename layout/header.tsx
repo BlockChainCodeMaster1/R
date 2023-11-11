@@ -99,7 +99,7 @@ export default function Header() {
 
   return (
     <>
-    {showNav && (
+    {isMobile && showNav && (
         <div
           className=" bg-[#02000b] bg-opacity-50  fixed left-0 right-0 top-0 bottom-0 z-40"
           onClick={() => {
@@ -111,7 +111,7 @@ export default function Header() {
       {showNav && (
         <ul
           className=" justify-start sm:justify-center items-center gap-4 text-basic bg-[#02000b] bg-opacity-80 sm:bg-opacity-30 sm:bg-transparent bottom-0 z-50 
-      sm:bg-opacity-100 text-white flex fixed left-0 top-0 sm:relative flex-col sm:flex-row backdrop-blur-sm  w-1/2
+      sm:bg-opacity-100 text-white flex fixed left-0 top-0 sm:relative flex-col sm:flex-row backdrop-blur-sm  w-1/2 sm:w-full
       sm:backdrop-blur-none p-4 sm:p-0 overflow-hidden bg-none sm:bg-[url('/header_bg.png')] bg-no-repeat bg-[length:100%_100%]  bg-bottom text-center"
         >
           {leftNav.map((el, index) => (
