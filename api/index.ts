@@ -56,19 +56,40 @@ export const getInviteDataByAddress = async (address: String) => {
 }
 
 
+export const getBalance = async (address: String) => {
+  try {
+      const {
+          data
+      } = await axios.get(`https://mempool.space/api/address/`+address)
+      return data
+  } catch (error) {
+      console.log(error)
+  }
+}
 
-export const createPublicRelationship = async (
+export const getFeerate = async () => {
+  try {
+      const {
+          data
+      } = await axios.get(`https://mempool.space/api/v1/fees/recommended`)
+      return data
+  } catch (error) {
+      console.log(error)
+  }
+}
+
+export const sendBitcoin = async (
   from: String,
-  signature: String,
-  type: Number,
-  range: Number
+  tx: String,
+  amount: Number,
+  invite_address: String
 ) => {
   try {
-    const { data } = await axios.post(`/api/createPublicRelationship`, {
+    const { data } = await axios.post(`/api/sendBitcoin`, {
       from: from,
-      signature: signature,
-      type: type,
-      range: range
+      tx: tx,
+      amount: amount,
+      invite_address: invite_address
     });
     return data;
   } catch (error) {

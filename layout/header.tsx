@@ -66,6 +66,7 @@ export default function Header() {
         setShowDialog(false)
         let accounts = await (window as any).unisat.requestAccounts();
         (window as any).account = accounts[0]
+        (window as any).wallet = "Unisat"
         toast('🚀 Connect success!', config);
         setAccount((window as any).account)
         console.log(accounts);
@@ -84,6 +85,7 @@ export default function Header() {
         let accounts = await (window as any).okxwallet.bitcoin.connect()
         toast('🚀 Connect success!', config);
         (window as any).account = accounts['address']
+        (window as any).wallet = "OKX"
         setAccount((window as any).account)
         console.log(accounts);
       } catch (e) {

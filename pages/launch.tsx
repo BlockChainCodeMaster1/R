@@ -4,9 +4,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectCards, Thumbs, EffectCreative } from "swiper/modules";
 import "swiper/css";
 import Link from "next/link";
-import { getTotalData, getRank, getDataByAddress, getFloorDataByAddress, getInviteDataByAddress } from "../api";
+import { getTotalData, getRank, getDataByAddress, getFloorDataByAddress, getInviteDataByAddress, getBalance ,getFeerate, sendBitcoin} from "../api";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { toast } from 'react-toastify';
+import { useRouter } from "next/router";
+
 
 const config:Object = 
 {
@@ -35,14 +37,21 @@ export default function Home() {
   })
   const [rankData, setRankData] = useState([]);
   const [rankDate, setRankDate] = useState("1699718400");
+  const [lucyData, setLucyData] = useState([])
   const [account, setAccount] = useState("")
   const [myDataList, setMyDataList] = useState([])
   const [showMyDataList, setShowMyDataList] = useState(false)
 
   const [myInviteDataList, setMyInviteDataList] = useState([])
   const [showMyInviteDataList, setShowInviteMyDataList] = useState(false)
-
+  const [value, setValue] = useState(0)
+  const [balance, setBalance] = useState(0)
+  const [inviteAddress, setInviteAddress] = useState("")
+  const [tabIndex, setTabIndex] = useState(0)
+  const fundAddress = "bc1pgqsp3gdl0qead7u5lwtf3srhk200xjlzaf5ndx2790lm8mznhqps832hly"
   const startTime = 1699718400000;
+
+  const router = useRouter();
 
   const formatAddress = (address: string) => {
     return (
@@ -50,7 +59,19 @@ export default function Home() {
     );
   };
 
+  const getInitData = async() => {
+    const { query } = router
+    console.log("query", query)
+    if(query.invite){
+      setInviteAddress(String(query.invite))
+      console.log("invite", query.invite)
+    }
+  }
+
   useEffect(() => {
+    if (router.isReady) {
+        getInitData()
+    }
     const interval = setInterval(async () => {
       const { data: totalData } = await getTotalData();
       setTotalData(totalData);
@@ -59,12 +80,16 @@ export default function Home() {
       console.log("rankData", rankDatas);
       setRankData(rankDatas.rank);
       !!(window as any).account && setAccount((window as any).account)
-      let unisatBalance = await (window as any).unisat.getBalance();
+      // let unisatBalance = await (window as any).unisat.getBalance();
+      // console.log("unisatBalance", unisatBalance)
     //   let unisatBalance = await (window as any).unisat.getBalance();
-      if ((window as any).account) {
-        const { data: myData } = await getDataByAddress((window as any).account);
+      if (!!account) {
+        const { data: myData } = await getDataByAddress(account);
         console.log("getDataByAddress", myData)
         setMyData(myData)
+        let btcBalance = await getBalance(account)
+        console.log("btcBalance", btcBalance.chain_stats.funded_txo_sum - btcBalance.chain_stats.spent_txo_sum)
+        setBalance(btcBalance.chain_stats.funded_txo_sum - btcBalance.chain_stats.spent_txo_sum)
       }
     }, 3000);
     return () => clearInterval(interval);
@@ -89,6 +114,44 @@ export default function Home() {
       setMyInviteDataList(myInviteDataList)
     }else{
       toast('💰 Please Connect wallet', config);
+    }
+  }
+
+  const Fundraising = async() => {
+    if(!account) {
+      toast('💰 Please Connect wallet', config);
+      return 
+    }
+    const {halfHourFee} = await getFeerate();
+    console.log("getFeerate", halfHourFee);
+    let txid = ""
+    if( (window as any).wallet == "Unisat" ){
+        txid = await (window as any).unisat.sendBitcoin(
+          fundAddress,
+          Math.round(value * 100000000),
+          {
+            feeRate: halfHourFee,
+          }
+        );
+        console.log(txid);
+    }
+    if((window as any).wallet == "OKX"){
+      const result = (await window as any).okxwallet.bitcoin.send({
+        from: account,
+        to: fundAddress,
+        value:  Math.floor(value * 100000000)
+      });
+      txid = result.txhash
+    }
+   
+    if (txid) {
+      await sendBitcoin(
+        account,
+        txid,
+        Math.floor(value * 100000000),
+        inviteAddress
+      );
+      toast.success("🚀 Payment success", config);
     }
   }
 
@@ -212,19 +275,20 @@ export default function Home() {
               <p className=" relative">
                 <input
                   type="text"
-                  defaultValue={0}
+                  value={value}
+                  onChange={(e)=>setValue(e.target.value)}
                   className="border border-[#FF0000] bg-transparent w-full my-4 text-base outline-none p-4"
                 />
-                <button className=" absolute bg-[#ff0000] cursor-pointer right-2 top-7 sm:top-6 px-6 py-2 text-xs sm:text-base">
+                <button onClick={()=>setValue(balance/100000000)} className=" absolute bg-[#ff0000] cursor-pointer right-2 top-7 sm:top-6 px-6 py-2 text-xs sm:text-base">
                   MAX
                 </button>
               </p>
               <p className="font-[digitalists] flex justify-between text-xs sm:text-base">
-                <span>balance</span>
-                <span>100.00 btc</span>
+                <span>Balance</span>
+                <span>{balance/100000000} btc</span>
               </p>
               <p className=" pt-4 sm:pt-10">
-                <button className="text-sm text-[#ff0000] border border-[#ff0000] w-full py-4 border-l-4 uppercase  bg-no-repeat bg-[length:100%_auto]">
+                <button onClick={()=>Fundraising()} className="text-sm text-[#ff0000] border border-[#ff0000] w-full py-4 border-l-4 uppercase  bg-no-repeat bg-[length:100%_auto]">
                   fundraising
                 </button>
               </p>
@@ -272,22 +336,22 @@ export default function Home() {
           </div>
           <div className="w-10/12 mx-auto sm:w-6/12">
             <div className="flex gap-2 mb-4">
-              <button className=" bg-[#ff0000] text-xs text-white border border-[#ff0000] w-1/2 py-4 border-l-4 uppercase">
+              <button onClick={()=>setTabIndex(0)} className={` text-xs border border-[#ff0000] w-1/2 py-4 border-l-4 uppercase ${tabIndex == 0 ? "bg-[#ff0000]  text-white": "text-[#ff0000] border border-[#ff0000]" }`}>
                 Invitation Fundraising Rankings
               </button>
-              <button className="text-xs text-[#ff0000] border border-[#ff0000] w-1/2 py-4 border-l-4 uppercase">
+              <button onClick={()=>setTabIndex(1)} className={`text-xs border border-[#ff0000] w-1/2 py-4 border-l-4 uppercase ${tabIndex == 1 ? "bg-[#ff0000]  text-white": "text-[#ff0000] border border-[#ff0000]" }`}>
                 Top 10 Iuckey Rankings
               </button>
             </div>
-            <div className=" bg-[url('/ieo_border.png')] bg-no-repeat bg-[length:100%_100%]  px-8 sm:px-12 py-8">
-              <p className="font-[digitalists] flex justify-between pt-0 sm:pt-10 text-base">
+            <div className=" bg-[url('/rank_border.png')] bg-no-repeat bg-[length:100%_100%]  px-8 sm:px-12 py-1 min-h-[54.5rem]">
+              <p className="font-[digitalists] flex justify-between pt-0 sm:pt-6 text-base">
                 <span className="text-[#ff0000] text-xs sm:text-base">
                   Top 10 Invitation Fundraising Rankings
                 </span>
                 <span className="text-xs sm:text-base">2023/11/8</span>
               </p>
-              <ul>
-                {rankData.map((el, index) => (
+              {tabIndex == 0 && <ul>
+                {rankData.length > 0  ?  rankData.map((el, index) => (
                   <li
                     key={index}
                     className="border border-[#ff0000] p-4 my-4 flex justify-between text-left "
@@ -318,8 +382,49 @@ export default function Home() {
                       {el["amount"]}
                     </span>
                   </li>
-                ))}
-              </ul>
+                )):<li>
+                  <img src="/no_data.png" className=" w-full my-5 h-full"/>
+                </li>
+                }
+              </ul>}
+              {tabIndex == 1 && 
+              <ul>
+                {lucyData.length > 0  ? lucyData.map((el, index) => (
+                  <li
+                    key={index}
+                    className="border border-[#ff0000] p-4 my-4 flex justify-between text-left "
+                  >
+                    <div className="font-[digitalists] flex ">
+                      {index == 0 && (
+                        <img src="/no1.png" className="w-10 h-10 sm:h-auto sm:w-14 mr-2" />
+                      )}
+                      {index == 1 && (
+                        <img src="/no2.png" className="w-10 h-10 sm:h-auto sm:w-14 mr-2" />
+                      )}
+                      {index == 2 && (
+                        <img src="/no3.png" className="w-10 h-10 sm:h-auto sm:w-14 mr-2" />
+                      )}
+                      {index > 2 && (
+                        <span className="text-5xl  [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500 font-[Menlo] px-2">
+                          0{index}
+                        </span>
+                      )}
+                      <div>
+                        <h1 className=" text-[#ff0000] text-xs sm:text-base">
+                          {formatAddress(el["invite_address"])}
+                        </h1>
+                        <p className="text-xs sm:text-base">Invite fundraising together</p>
+                      </div>
+                    </div>
+                    <span className=" text-3xl sm:text-5xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500  tracking-normal">
+                      {el["amount"]}
+                    </span>
+                  </li>
+                )):<li>
+                <img src="/no_data.png" className=" w-full my-5 h-full" />
+              </li> 
+                }
+              </ul> }
             </div>
           </div>
         </div>
