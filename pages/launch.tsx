@@ -178,7 +178,7 @@ export default function Home() {
           <span className=" cursor-pointer" onClick={()=>setShowMyDataList(false)}>X</span>
         </h1>
         <ul>
-            {myDataList.map((el,index)=><li className=" flex justify-between p-2 border-b border-[#ff0000] items-center">
+            {myDataList.map((el,index)=><li key={index} className=" flex justify-between p-2 border-b border-[#ff0000] items-center">
                 <span className="text-base">
                     <h1>{formatAddress(el['address'])}</h1>
                     <p>{dayjs(el['date']).format('MM/DD/YYYY')}</p>
@@ -197,7 +197,7 @@ export default function Home() {
           <span className=" cursor-pointer" onClick={()=>setShowInviteMyDataList(false)}>X</span>
         </h1>
         <ul>
-            { myInviteDataList.map((el,index)=><li className=" flex justify-between p-2 border-b border-[#ff0000] items-center">
+            { myInviteDataList.map((el,index)=><li key={index} className=" flex justify-between p-2 border-b border-[#ff0000] items-center">
                 <span className="text-base">
                     <h1>{formatAddress(el['address'])}</h1>
                     <p>{dayjs(el['date']).format('MM/DD/YYYY')}</p>
