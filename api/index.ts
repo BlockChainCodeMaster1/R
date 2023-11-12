@@ -11,11 +11,22 @@ export const getTotalData = async () => {
     }
 }
 
-export const getRank = async (date: String) => {
+export const getRank = async (startTime: Number, endTime: Number) => {
   try {
       const {
           data
-      } = await axios.get(`/api/getRank/`+date)
+      } = await axios.get(`/api/getRank/${startTime}/${endTime}`)
+      return data
+  } catch (error) {
+      console.log(error)
+  }
+}
+
+export const getLucky = async (startTime: Number, endTime: Number) => {
+  try {
+      const {
+          data
+      } = await axios.get(`/api/getLucky/${startTime}/${endTime}`)
       return data
   } catch (error) {
       console.log(error)

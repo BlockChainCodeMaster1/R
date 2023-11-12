@@ -2,7 +2,8 @@
 export default function router (router, handle) {
     /** api **/
     router.get("/api/getTotalData", require("../container/ieo.js").getTotalData)
-    router.get("/api/getRank/:date", require("../container/ieo.js").getRank)
+    router.get("/api/getRank/:startTime/:endTime", require("../container/ieo.js").getRank)
+    router.get("/api/getLucky/:startTime/:endTime", require("../container/ieo.js").getLucky)
     router.get("/api/getDataByAddress/:address", require("../container/ieo.js").getDataByAddress)
     router.get("/api/getFloorDataByAddress/:address", require("../container/ieo.js").getFloorDataByAddress)
     router.get("/api/getInviteDataByAddress/:address", require("../container/ieo.js").getInviteDataByAddress)

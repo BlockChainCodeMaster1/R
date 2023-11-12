@@ -1,6 +1,7 @@
 import { Sequelize } from '@sequelize/core';
 import configs from "./db.json";
 import IEO from "../model/ieo";
+import LUCKY from "../model/lucky";
 
 const dbHost = configs.mysql.host,
   dbPort = configs.mysql.port,
@@ -32,5 +33,6 @@ const db = {
 };
 
 db.IEO = IEO(db.sequelize, Sequelize.DataTypes);
+db.LUCKY = LUCKY(db.sequelize, Sequelize.DataTypes);
 
 export default db;

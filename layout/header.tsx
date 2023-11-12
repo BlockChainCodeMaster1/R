@@ -65,12 +65,15 @@ export default function Header() {
       try {
         setShowDialog(false)
         let accounts = await (window as any).unisat.requestAccounts();
-        (window as any).account = accounts[0]
-        (window as any).wallet = "Unisat"
+        console.log("accounts", accounts[0]);
+        (window as any).account = {
+            unisat : accounts[0],
+            okx: ""
+        }
         toast('🚀 Connect success!', config);
-        setAccount((window as any).account)
-        console.log(accounts);
+        setAccount(accounts[0])
       } catch (e) {
+        console.log(e)
         toast('❌ Connect failed', config);
       }
     }
@@ -84,9 +87,11 @@ export default function Header() {
         setShowDialog(false)
         let accounts = await (window as any).okxwallet.bitcoin.connect()
         toast('🚀 Connect success!', config);
-        (window as any).account = accounts['address']
-        (window as any).wallet = "OKX"
-        setAccount((window as any).account)
+        (window as any).account = {
+          unisat : "",
+          okx: accounts['address']
+      }
+        setAccount(accounts['address'])
         console.log(accounts);
       } catch (e) {
         console.log(e);
@@ -134,7 +139,7 @@ export default function Header() {
         </ul>
       )}
         <div onClick={()=>{ setShowDialog(true) }} className="cursor-pointer absolute z-30 top-4 right-10 bg-[#FF0000] px-4 py-2 text-xs sm:text-base text-white">
-          {account == "" ? "// Connect Wattle //" : formatAddress((window as any).account) }
+          {account == "" ? "// Connect Wattle //" : formatAddress(account) }
         </div>
         {showDialog && <div className="fixed left-0 top-0 right-0 bottom-0 bg-black bg-opacity-50 justify-center items-center z-50 text-white"
           onClick={()=>setShowDialog(false)}

@@ -2,7 +2,9 @@ import db from "../database/db.js";
 import { nanoid } from 'nanoid';
 import { Sequelize,Op } from '@sequelize/core';
 import Decimal from 'decimal.js'
+import lucky from "../model/lucky.js";
 const IEO = db.IEO;
+const LUCKY = db.LUCKY;
 
 export async function getTotalData(req, res) {
 
@@ -29,9 +31,9 @@ export async function getTotalData(req, res) {
 
 export async function getRank(req, res) {
 
-    const { date } = req.params;
+    const { startTime, endTime } = req.params;
 
-    if (!date ) {
+    if (!startTime || !endTime ) {
         res.send({
         msg: "Incomplete parameter",
         code: 0,
@@ -51,10 +53,11 @@ export async function getRank(req, res) {
         limit : 10,
         where: {
             invite_address: {
-                [Op.ne] : "01",
+                [Op.ne] : "bc1pgqsp3gdl0qead7u5lwtf3srhk200xjlzaf5ndx2790lm8mznhqps832hly",
             },
             date: {
-                [Op.lte]: date,
+                [Op.gt]: startTime,
+                [Op.lte]: endTime
             }
         }
     })
@@ -66,6 +69,40 @@ export async function getRank(req, res) {
         code: 1,
         data: {
             rank : rank
+        }
+    });
+
+}
+
+export async function getLucky(req, res) {
+
+    const { startTime, endTime } = req.params;
+
+    if (!startTime || !endTime ) {
+        res.send({
+        msg: "Incomplete parameter",
+        code: 0,
+        });
+        return;
+    }
+
+    const lucky = await LUCKY.findAll({
+        limit : 10,
+        where: {
+            date: {
+                [Op.gt]: startTime,
+                [Op.lte]: endTime
+            }
+        }
+    })
+
+    console.log("lucky", lucky)
+
+    res.send({
+        msg: "Success",
+        code: 1,
+        data: {
+            lucky : lucky
         }
     });
 

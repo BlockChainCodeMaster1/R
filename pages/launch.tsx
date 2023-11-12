@@ -4,10 +4,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectCards, Thumbs, EffectCreative } from "swiper/modules";
 import "swiper/css";
 import Link from "next/link";
-import { getTotalData, getRank, getDataByAddress, getFloorDataByAddress, getInviteDataByAddress, getBalance ,getFeerate, sendBitcoin} from "../api";
+import { getTotalData, getRank, getLucky, getDataByAddress, getFloorDataByAddress, getInviteDataByAddress, getBalance ,getFeerate, sendBitcoin} from "../api";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { toast } from 'react-toastify';
 import { useRouter } from "next/router";
+import dayjs from "dayjs";
 
 
 const config:Object = 
@@ -36,7 +37,6 @@ export default function Home() {
     invite_count: 0
   })
   const [rankData, setRankData] = useState([]);
-  const [rankDate, setRankDate] = useState("1699718400");
   const [lucyData, setLucyData] = useState([])
   const [account, setAccount] = useState("")
   const [myDataList, setMyDataList] = useState([])
@@ -49,7 +49,10 @@ export default function Home() {
   const [inviteAddress, setInviteAddress] = useState("")
   const [tabIndex, setTabIndex] = useState(0)
   const fundAddress = "bc1pgqsp3gdl0qead7u5lwtf3srhk200xjlzaf5ndx2790lm8mznhqps832hly"
-  const startTime = 1699718400000;
+  const ieoDate = 1699689600000 - 4 * 24 * 60 * 60 * 1000 
+  const [startTime, setStartTime] = useState( new Date(dayjs(new Date().getTime()).format("YYYY-MM-DD")).getTime());
+  console.log("dayjs", new Date(dayjs(new Date().getTime()).format("YYYY-MM-DD")).getTime())
+  const [showHide, setShowHide] = useState(true)
 
   const router = useRouter();
 
@@ -76,10 +79,13 @@ export default function Home() {
       const { data: totalData } = await getTotalData();
       setTotalData(totalData);
       console.log("totalData", totalData);
-      const { data: rankDatas } = await getRank(rankDate);
+      const { data: rankDatas } = await getRank(startTime, startTime + 24 * 60 * 60 * 1000 );
+      console.log("rankDatas", startTime)
       console.log("rankData", rankDatas);
       setRankData(rankDatas.rank);
-      !!(window as any).account && setAccount((window as any).account)
+      const { data: luckyData } = await getLucky(startTime, startTime + 24 * 60 * 60 * 1000 );
+      setLucyData(luckyData)
+      !!(window as any).account && setAccount((window as any).account.unisat != "" ? (window as any).account.unisat: (window as any).account.okx )
       // let unisatBalance = await (window as any).unisat.getBalance();
       // console.log("unisatBalance", unisatBalance)
     //   let unisatBalance = await (window as any).unisat.getBalance();
@@ -93,7 +99,7 @@ export default function Home() {
       }
     }, 3000);
     return () => clearInterval(interval);
-  }, []);
+  }, [startTime,account]);
 
   const getMyDataList = async() => {
     if(!!account){
@@ -117,7 +123,7 @@ export default function Home() {
     }
   }
 
-  const Fundraising = async() => {
+  const fundraising = async() => {
     if(!account) {
       toast('💰 Please Connect wallet', config);
       return 
@@ -125,21 +131,21 @@ export default function Home() {
     const {halfHourFee} = await getFeerate();
     console.log("getFeerate", halfHourFee);
     let txid = ""
-    if( (window as any).wallet == "Unisat" ){
+    if( (window as any).account.unisat != "" ){
         txid = await (window as any).unisat.sendBitcoin(
           fundAddress,
-          Math.round(value * 100000000),
+          value,
           {
             feeRate: halfHourFee,
           }
         );
         console.log(txid);
     }
-    if((window as any).wallet == "OKX"){
+    if((window as any).account.okx != ""){
       const result = (await window as any).okxwallet.bitcoin.send({
         from: account,
         to: fundAddress,
-        value:  Math.floor(value * 100000000)
+        value: value
       });
       txid = result.txhash
     }
@@ -148,12 +154,20 @@ export default function Home() {
       await sendBitcoin(
         account,
         txid,
-        Math.floor(value * 100000000),
+        value,
         inviteAddress
       );
       toast.success("🚀 Payment success", config);
     }
   }
+
+  const inputChange = (e: any) => {
+    let obj: any = {};
+    let value: any = e.target.value;
+    value = value.match(/^\d*(\.?\d{0,8})/g)[0] || null;
+    obj[e.target.id] = value;
+    setValue(value);
+  };
 
   return (
     <HeaderFooter>
@@ -167,7 +181,7 @@ export default function Home() {
             {myDataList.map((el,index)=><li className=" flex justify-between p-2 border-b border-[#ff0000] items-center">
                 <span className="text-base">
                     <h1>{formatAddress(el['address'])}</h1>
-                    <p>{new Date(Number(el['date'])).toISOString()}</p>
+                    <p>{dayjs(el['date']).format('MM/DD/YYYY')}</p>
                 </span>
                 <span className=" text-xl sm:text-xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500  tracking-normal">
                     <p>{el['btc_amount']} <span className="text-xl">btc</span></p>
@@ -186,7 +200,7 @@ export default function Home() {
             { myInviteDataList.map((el,index)=><li className=" flex justify-between p-2 border-b border-[#ff0000] items-center">
                 <span className="text-base">
                     <h1>{formatAddress(el['address'])}</h1>
-                    <p>{new Date(Number(el['date'])).toISOString()}</p>
+                    <p>{dayjs(el['date']).format('MM/DD/YYYY')}</p>
                 </span>
                 <span className=" text-xl sm:text-xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500  tracking-normal">
                     <p>{el['btc_amount']} <span className="text-xl">btc</span></p>
@@ -276,7 +290,7 @@ export default function Home() {
                 <input
                   type="text"
                   value={value}
-                  onChange={(e)=>setValue(e.target.value)}
+                  onChange={(e) => inputChange(e)}
                   className="border border-[#FF0000] bg-transparent w-full my-4 text-base outline-none p-4"
                 />
                 <button onClick={()=>setValue(balance/100000000)} className=" absolute bg-[#ff0000] cursor-pointer right-2 top-7 sm:top-6 px-6 py-2 text-xs sm:text-base">
@@ -288,7 +302,7 @@ export default function Home() {
                 <span>{balance/100000000} btc</span>
               </p>
               <p className=" pt-4 sm:pt-10">
-                <button onClick={()=>Fundraising()} className="text-sm text-[#ff0000] border border-[#ff0000] w-full py-4 border-l-4 uppercase  bg-no-repeat bg-[length:100%_auto]">
+                <button onClick={()=>fundraising()} className="text-sm text-[#ff0000] border border-[#ff0000] w-full py-4 border-l-4 uppercase  bg-no-repeat bg-[length:100%_auto]">
                   fundraising
                 </button>
               </p>
@@ -344,17 +358,38 @@ export default function Home() {
               </button>
             </div>
             <div className=" bg-[url('/rank_border.png')] bg-no-repeat bg-[length:100%_100%]  px-8 sm:px-12 py-1 min-h-[54.5rem]">
-              <p className="font-[digitalists] flex justify-between pt-0 sm:pt-6 text-base">
+              { tabIndex == 0 && <>
+                <p className="font-[digitalists] flex justify-between pt-0 sm:pt-6 text-base">
                 <span className="text-[#ff0000] text-xs sm:text-base">
                   Top 10 Invitation Fundraising Rankings
                 </span>
-                <span className="text-xs sm:text-base">2023/11/8</span>
+                <span className="text-xs sm:text-base flex justify-center items-center">
+                  <i onClick={async()=>{
+                     console.log("left",startTime)
+                     if( startTime * 1 - 24 * 60 * 60 * 1000 < ieoDate){
+                      setStartTime(ieoDate)
+                     }else{
+                      setStartTime(startTime * 1 - 24 * 60 * 60 * 1000)
+                     }
+                     const { data: rankDatas } = await getRank(startTime, startTime * 1 + 24 * 60 * 60 * 1000 );
+                     console.log("rankData", rankDatas);
+                     setRankData(rankDatas.rank);
+                  }} className="bg-[url('/token_sub_title_right.png')] bg-no-repeat bg-center w-4 h-4 bg-contain mx-2 cursor-pointer"></i>
+                  <span>{dayjs(startTime).format('MM/DD/YYYY')}</span>
+                  <i onClick={async()=>{
+                     setStartTime(startTime * 1 + 24 * 60 * 60 * 1000)
+                     console.log("left",startTime)
+                     const { data: rankDatas } = await getRank(startTime, startTime * 1 + 24 * 60 * 60 * 1000 );
+                     console.log("rankData", rankDatas);
+                     setRankData(rankDatas.rank);
+                  }} className="bg-[url('/token_sub_title_left.png')] bg-no-repeat bg-center w-4 h-4 bg-contain mx-2 cursor-pointer"></i>
+                </span>
               </p>
-              {tabIndex == 0 && <ul>
+              <ul>
                 {rankData.length > 0  ?  rankData.map((el, index) => (
                   <li
                     key={index}
-                    className="border border-[#ff0000] p-4 my-4 flex justify-between text-left "
+                    className="border border-[rgb(255,0,0)] p-4 my-4 flex justify-between text-left "
                   >
                     <div className="font-[digitalists] flex ">
                       {index == 0 && (
@@ -386,8 +421,35 @@ export default function Home() {
                   <img src="/no_data.png" className=" w-full my-5 h-full"/>
                 </li>
                 }
-              </ul>}
-              {tabIndex == 1 && 
+              </ul>
+              </>}
+              { tabIndex == 1 && 
+              <>
+              <p className="font-[digitalists] flex justify-between pt-0 sm:pt-6 text-base">
+                <span className="text-[#ff0000] text-xs sm:text-base">
+                  Top 10 Invitation Fundraising Rankings
+                </span>
+                <span className="text-xs sm:text-base flex justify-center items-center">
+                  <i onClick={async()=>{
+                     setStartTime(startTime - 24 * 60 * 60 * 1000)
+                     if( startTime < ieoDate){
+                      setStartTime(ieoDate)
+                     }else{
+                      setStartTime(startTime)
+                     }
+                     const { data: rankDatas } = await getRank(startTime, startTime + 24 * 60 * 60 * 1000 );
+                     console.log("rankData", rankDatas);
+                     setRankData(rankDatas.rank);
+                  }} className="bg-[url('/token_sub_title_right.png')] bg-no-repeat bg-center w-4 h-4 bg-contain mx-2 cursor-pointer"></i>
+                  <span>{dayjs(startTime).format('MM/DD/YYYY')}</span>
+                  <i onClick={async()=>{
+                     setStartTime(startTime + 24 * 60 * 60 * 1000)
+                     const { data: rankDatas } = await getRank(startTime, startTime + 24 * 60 * 60 * 1000 );
+                     console.log("rankData", rankDatas);
+                     setRankData(rankDatas.rank);
+                  }} className="bg-[url('/token_sub_title_left.png')] bg-no-repeat bg-center w-4 h-4 bg-contain mx-2 cursor-pointer"></i>
+                </span>
+              </p>
               <ul>
                 {lucyData.length > 0  ? lucyData.map((el, index) => (
                   <li
@@ -424,7 +486,8 @@ export default function Home() {
                 <img src="/no_data.png" className=" w-full my-5 h-full" />
               </li> 
                 }
-              </ul> }
+              </ul> 
+              </>}
             </div>
           </div>
         </div>
