@@ -102,7 +102,7 @@ export default function Home() {
         // setBalance(btcBalance.chain_stats.funded_txo_sum - btcBalance.chain_stats.spent_txo_sum)
         setBalance(100)
       }
-    }, 300);
+    }, 2000);
     return () => clearInterval(interval);
   }, [startTime,account]);
 
