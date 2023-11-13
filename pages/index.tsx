@@ -17,7 +17,7 @@ export default function Home() {
             <h2 className="font-[digitalists] text-[#FF0000] text-xl ml-0 sm:ml-40 mt-6 sm:text-left text-center">A System to Combat Bitcoin Ecological Entropy Increase</h2>
             <p className=" border-l-4 border-[#FF0000] pl-4 ml-0 sm:ml-48 mt-14 text-xs w-12/12 sm:w-8/12 relative leading-4">
             <i className=" w-60 h-8 bg-[url('/slogan_tips.png')] bg-no-repeat bg-right-top bg-[length:100%_auto] absolute sm:-right-24 right-0 -top-8"></i>
-            REVSis obbrevuation for 'Revolution' and 'Satoshis,' It is utilising 'sats,' the smallest unit, as entropy factors, REVS introduces a resonance mechanism to catalyze entropic fusion. This innovative approach combats the escalating disarray within the Bitcoin ecosystem, striving for a more ordered and stable digital currency environment.</p>
+            REVSis obbrevuation for &apos;Revolution&apos; and &apos;Satoshis,&apos; It is utilising &apos;sats,&apos; the smallest unit, as entropy factors, REVS introduces a resonance mechanism to catalyze entropic fusion. This innovative approach combats the escalating disarray within the Bitcoin ecosystem, striving for a more ordered and stable digital currency environment.</p>
               {/* <p className=" text-center py-4">
                 <Link href="/launch"><button className="cursor-pointer bg-[#FF0000]  my-4 px-14 py-3 text-xs sm:text-base drop-shadow-[0_5px_5px_rgba(255,0,0,0.75)]">Launch</button></Link>
               </p> */}
@@ -36,7 +36,7 @@ export default function Home() {
         <div className=" sm:w-8/12 w-11/12 mx-auto bg-[url('/project_vison_bg.png')] bg-no-repeat bg-center bg-[length:100%_auto] py-2 sm:py-32 flex gap-12 flex-col sm:flex-row">
           <div className=" sm:w-6/12 w-12/12">
             <h1><img src="/project_vision.png" className="w-7/12" /></h1>
-            <p className=" text-xs ml-4 mt-8 leading-4">REVS's target  is through the mechanism of entropic fusion, that's to enhance orderliness within the system, reducing the propensity towards chaos. This initiative is set to propel the cryptocurrency market towards greater stability and fairness</p>
+            <p className=" text-xs ml-4 mt-8 leading-4">REVS&apos;s target  is through the mechanism of entropic fusion, that&apos;s to enhance orderliness within the system, reducing the propensity towards chaos. This initiative is set to propel the cryptocurrency market towards greater stability and fairness</p>
           </div>
           <div className=" w-12/12 sm:w-6/12 p-4 sm:p-8 h-60 sm:h-80">
             <div className="border-4 border-[#ff0000] w-full h-full relative z-10">
