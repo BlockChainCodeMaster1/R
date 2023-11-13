@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import { useRouter } from "next/router";
 import Decimal from 'decimal.js'
 import dayjs from "dayjs";
-const utc = require('dayjs/plugin/utc')
+import utc from 'dayjs/plugin/utc'
 dayjs.extend(utc)
 
 console.log("dayjs", dayjs)
@@ -53,7 +53,9 @@ export default function Home() {
   const [inviteAddress, setInviteAddress] = useState("")
   const [tabIndex, setTabIndex] = useState(0)
   const fundAddress = "tb1p282kvgryczkeellt8x7ucp7dzt5kqktlydyhvm52zc9y2jegn4dsqnjeys"
+  // @ts-ignore
   const ieoDate =  dayjs.utc("2023-11-13").$d.getTime()
+  // @ts-ignore
   const [startTime, setStartTime] = useState( dayjs.utc(dayjs.utc().format("YYYY-MM-DD")).$d.getTime() );
   console.log(startTime,"startTime")
   console.log("dayjs", new Date(dayjs(new Date().getTime()).format("YYYY-MM-DD")).getTime())
