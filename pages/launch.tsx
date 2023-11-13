@@ -8,8 +8,12 @@ import { getTotalData, getRank, getLucky, getDataByAddress, getFloorDataByAddres
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { toast } from 'react-toastify';
 import { useRouter } from "next/router";
+import Decimal from 'decimal.js'
 import dayjs from "dayjs";
+const utc = require('dayjs/plugin/utc')
+dayjs.extend(utc)
 
+console.log("dayjs", dayjs)
 
 const config:Object = 
 {
@@ -48,11 +52,11 @@ export default function Home() {
   const [balance, setBalance] = useState(0)
   const [inviteAddress, setInviteAddress] = useState("")
   const [tabIndex, setTabIndex] = useState(0)
-  const fundAddress = "bc1pgqsp3gdl0qead7u5lwtf3srhk200xjlzaf5ndx2790lm8mznhqps832hly"
-  const ieoDate = 1699689600000 - 4 * 24 * 60 * 60 * 1000 
-  const [startTime, setStartTime] = useState( new Date(dayjs(new Date().getTime()).format("YYYY-MM-DD")).getTime());
+  const fundAddress = "tb1p282kvgryczkeellt8x7ucp7dzt5kqktlydyhvm52zc9y2jegn4dsqnjeys"
+  const ieoDate =  dayjs.utc("2023-11-13").$d.getTime()
+  const [startTime, setStartTime] = useState( dayjs.utc(dayjs.utc().format("YYYY-MM-DD")).$d.getTime() );
+  console.log(startTime,"startTime")
   console.log("dayjs", new Date(dayjs(new Date().getTime()).format("YYYY-MM-DD")).getTime())
-  const [showHide, setShowHide] = useState(true)
 
   const router = useRouter();
 
@@ -93,11 +97,12 @@ export default function Home() {
         const { data: myData } = await getDataByAddress(account);
         console.log("getDataByAddress", myData)
         setMyData(myData)
-        let btcBalance = await getBalance(account)
-        console.log("btcBalance", btcBalance.chain_stats.funded_txo_sum - btcBalance.chain_stats.spent_txo_sum)
-        setBalance(btcBalance.chain_stats.funded_txo_sum - btcBalance.chain_stats.spent_txo_sum)
+        // let btcBalance = await getBalance(account)
+        // console.log("btcBalance", btcBalance.chain_stats.funded_txo_sum - btcBalance.chain_stats.spent_txo_sum)
+        // setBalance(btcBalance.chain_stats.funded_txo_sum - btcBalance.chain_stats.spent_txo_sum)
+        setBalance(100)
       }
-    }, 3000);
+    }, 300);
     return () => clearInterval(interval);
   }, [startTime,account]);
 
@@ -134,7 +139,7 @@ export default function Home() {
     if( (window as any).account.unisat != "" ){
         txid = await (window as any).unisat.sendBitcoin(
           fundAddress,
-          value,
+          Decimal.add(1, 100).toNumber(),
           {
             feeRate: halfHourFee,
           }
@@ -145,10 +150,11 @@ export default function Home() {
       const result = (await window as any).okxwallet.bitcoin.send({
         from: account,
         to: fundAddress,
-        value: value
+        value: Decimal.add(1, 100).toNumber()
       });
       txid = result.txhash
     }
+
    
     if (txid) {
       await sendBitcoin(
@@ -178,12 +184,12 @@ export default function Home() {
           <span className=" cursor-pointer" onClick={()=>setShowMyDataList(false)}>X</span>
         </h1>
         <ul>
-            {myDataList.map((el,index)=><li key={index} className=" flex justify-between p-2 border-b border-[#ff0000] items-center">
+            {myDataList.map((el,index)=><li key={index} className=" flex justify-between p-2 border-b border-[#ff0000] items-center text-white">
                 <span className="text-base">
                     <h1>{formatAddress(el['address'])}</h1>
-                    <p>{dayjs(el['date']).format('MM/DD/YYYY')}</p>
+                    <p>{dayjs(el['date']*1).format('MM/DD/YYYY HH:MM')}</p>
                 </span>
-                <span className=" text-xl sm:text-xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500  tracking-normal">
+                <span className=" text-xl sm:text-xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500  tracking-normal text-right">
                     <p>{el['btc_amount']} <span className="text-xl">btc</span></p>
                     <p>{el['token_amount']} <span className="text-xl">revs</span></p>
                 </span>
@@ -197,14 +203,14 @@ export default function Home() {
           <span className=" cursor-pointer" onClick={()=>setShowInviteMyDataList(false)}>X</span>
         </h1>
         <ul>
-            { myInviteDataList.map((el,index)=><li key={index} className=" flex justify-between p-2 border-b border-[#ff0000] items-center">
+            { myInviteDataList.map((el,index)=><li key={index} className=" flex justify-between p-2 border-b border-[#ff0000] items-center  text-white">
                 <span className="text-base">
                     <h1>{formatAddress(el['address'])}</h1>
-                    <p>{dayjs(el['date']).format('MM/DD/YYYY')}</p>
+                    <p>{dayjs(el['date']*1).format('MM/DD/YYYY HH:MM')}</p>
                 </span>
-                <span className=" text-xl sm:text-xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500  tracking-normal">
+                <span className=" text-xl sm:text-xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500  tracking-normal  text-right">
                     <p>{el['btc_amount']} <span className="text-xl">btc</span></p>
-                    <p>{el['token_amount']} <span className="text-xl">revs</span></p>
+                    <p>{Math.floor((el['token_amount']) / 10)} <span className="text-xl">revs</span></p>
                 </span>
             </li>)}
         </ul>
@@ -229,7 +235,7 @@ export default function Home() {
                 Total fundraising amount
               </h1>
               <p className=" text-5xl sm:text-7xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500  tracking-normal">
-                {totalData.btc_amount} <span className=" text-4xl">BTC</span>
+                {totalData.btc_amount.toFixed(4)} <span className=" text-4xl">BTC</span>
               </p>
             </li>
             <li>
@@ -250,13 +256,13 @@ export default function Home() {
                   <h1>Exchange ratio</h1>
                   <p className=" text-2xl pb-4">1 <span className=" text-[#ff7700] text-base">₿</span> = {30000 - (Math.floor(totalData.btc_amount/2)*10)} <span className=" text-[#ff0000] text-base">REVS</span></p>
                   <h1>My total investment</h1>
-                  <p className=" text-2xl  pb-4">{myData.btc_amount} <span className=" text-[#ff7700] text-base">₿</span></p>
+                  <p className=" text-2xl  pb-4">{myData.btc_amount.toFixed(8)} <span className=" text-[#ff7700] text-base">₿</span></p>
                   <h1>Tokens available</h1>
                   <p className=" text-2xl  pb-4">{myData.token_amount} <span className=" text-[#ff0000] text-base">REVS</span></p>
                 </li>
                 <li className=" relative w-62 h-28 mt-0 sm:mt-10 mb-10 sm:mb-0 flex justify-center sm:block ">
                     <div className="text-xs absolute top-8 sm:left-16 left-22 text-center z-30">
-                        <h1>{totalData.btc_amount} Btc</h1>
+                        <h1>{totalData.btc_amount.toFixed(4)} Btc</h1>
                         <p>({Math.ceil(totalData.btc_amount/2)}/3000)floor</p>
                     </div>
                     <div className=" absolute -bottom-4 sm:left-20 left-26 text-xs whitespace-nowrap ">
@@ -271,7 +277,7 @@ export default function Home() {
                     </div>
                   </div>
                   
-                  <div className="overflow-hidden absolute top-0  h-1/5">
+                  <div className={`overflow-hidden absolute top-0`} style={{height: Math.ceil(totalData.btc_amount/2)/3000*100 +"%"}}>
                     <div className=" flex h-28">
                         <div className="w-28 overflow-hidden inline-block">
                         <div className=" h-56  bg-[#ff0000] -rotate-45 transform origin-top-left"></div>
@@ -299,7 +305,7 @@ export default function Home() {
               </p>
               <p className="font-[digitalists] flex justify-between text-xs sm:text-base">
                 <span>Balance</span>
-                <span>{balance/100000000} btc</span>
+                <span>{balance/100000000} BTC</span>
               </p>
               <p className=" pt-4 sm:pt-10">
                 <button onClick={()=>fundraising()} className="text-sm text-[#ff0000] border border-[#ff0000] w-full py-4 border-l-4 uppercase  bg-no-repeat bg-[length:100%_auto]">
@@ -335,6 +341,7 @@ export default function Home() {
                 <input
                   value={`https://revs.network/?invite=${account}`}
                   type="text"
+                  readOnly
                   className="border border-[#FF0000] bg-transparent w-full my-4 text-xs sm:text-base outline-none p-4"
                 />
                  <CopyToClipboard
@@ -354,14 +361,14 @@ export default function Home() {
                 Invitation Fundraising Rankings
               </button>
               <button onClick={()=>setTabIndex(1)} className={`text-xs border border-[#ff0000] w-1/2 py-4 border-l-4 uppercase ${tabIndex == 1 ? "bg-[#ff0000]  text-white": "text-[#ff0000] border border-[#ff0000]" }`}>
-                Top 10 Iuckey Rankings
+                Top 10 Luckey Rankings
               </button>
             </div>
             <div className=" bg-[url('/rank_border.png')] bg-no-repeat bg-[length:100%_100%]  px-8 sm:px-12 py-1 min-h-[54.5rem]">
               { tabIndex == 0 && <>
                 <p className="font-[digitalists] flex justify-between pt-0 sm:pt-6 text-base">
                 <span className="text-[#ff0000] text-xs sm:text-base">
-                  Top 10 Invitation Fundraising Rankings
+                  Top 10 Invitation Fundraising
                 </span>
                 <span className="text-xs sm:text-base flex justify-center items-center">
                   <i onClick={async()=>{
@@ -375,7 +382,7 @@ export default function Home() {
                      console.log("rankData", rankDatas);
                      setRankData(rankDatas.rank);
                   }} className="bg-[url('/token_sub_title_right.png')] bg-no-repeat bg-center w-4 h-4 bg-contain mx-2 cursor-pointer"></i>
-                  <span>{dayjs(startTime).format('MM/DD/YYYY')}</span>
+                  <span>{dayjs.utc(startTime).format('MM/DD/YYYY')}(UTC+0)</span>
                   <i onClick={async()=>{
                      setStartTime(startTime * 1 + 24 * 60 * 60 * 1000)
                      console.log("left",startTime)
@@ -441,7 +448,7 @@ export default function Home() {
                      console.log("rankData", rankDatas);
                      setRankData(rankDatas.rank);
                   }} className="bg-[url('/token_sub_title_right.png')] bg-no-repeat bg-center w-4 h-4 bg-contain mx-2 cursor-pointer"></i>
-                  <span>{dayjs(startTime).format('MM/DD/YYYY')}</span>
+                  <span>{dayjs.utc(startTime).format('MM/DD/YYYY')}(UTC+0)</span>
                   <i onClick={async()=>{
                      setStartTime(startTime + 24 * 60 * 60 * 1000)
                      const { data: rankDatas } = await getRank(startTime, startTime + 24 * 60 * 60 * 1000 );

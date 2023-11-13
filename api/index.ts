@@ -90,14 +90,14 @@ export const getFeerate = async () => {
 }
 
 export const sendBitcoin = async (
-  from: String,
+    address: String,
   tx: String,
   amount: Number,
   invite_address: String
 ) => {
   try {
     const { data } = await axios.post(`/api/sendBitcoin`, {
-      from: from,
+        address: address,
       tx: tx,
       amount: amount,
       invite_address: invite_address

@@ -3,11 +3,11 @@
         "port": 8000
     },
     "mysql": {
-        "host": "54.251.88.108",
+        "host": "54.254.20.173",
         "port": 3306,
-        "username": "acoki",
+        "username": "root",
         "password": "acoki123456",
-        "dbName": "r"
+        "dbName": "R"
     }
 }
 

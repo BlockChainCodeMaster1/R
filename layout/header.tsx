@@ -139,7 +139,7 @@ export default function Header() {
         </ul>
       )}
         <div onClick={()=>{ setShowDialog(true) }} className="cursor-pointer absolute z-30 top-4 right-10 bg-[#FF0000] px-4 py-2 text-xs sm:text-base text-white">
-          {account == "" ? "// Connect Wattle //" : formatAddress(account) }
+          {account == "" ? "// Connect Wallet //" : formatAddress(account) }
         </div>
         {showDialog && <div className="fixed left-0 top-0 right-0 bottom-0 bg-black bg-opacity-50 justify-center items-center z-50 text-white"
           onClick={()=>setShowDialog(false)}

@@ -12,18 +12,28 @@ export async function getTotalData(req, res) {
 
     console.log("btc_amount", Number(btc_amount))
 
-    const { count } = await IEO.findAndCountAll({
-        group: 'address'
-      });
+    const users = await IEO.findAll({
+        attributes: [
+            'address',
+          ],
+    })
+
+    let arr = users.map((el,index)=>el.address)
+    console.log("inviter",arr)
+    const users_count = Array.from(new Set(arr))
+
+    // const { count } = await IEO.findAndCountAll({
+    //     group: 'address'
+    //   });
     
-    console.log("users_conunt", count.length)
+    // console.log("users_conunt", count.length)
 
     res.send({
         msg: "Success",
         code: 1,
         data: {
             btc_amount : Number(btc_amount),
-            users_conunt: count.length
+            users_conunt: users_count.length
         }
     });
 
@@ -145,28 +155,29 @@ export async function getDataByAddress(req, res) {
             invite_address : address
         }
     })
-    console.log("inviter_token_amount", parseInt(Number(inviter_token_amount) * 0.1) )
+    console.log("inviter_token_amount", parseInt(Number(inviter_token_amount) / 10) )
 
     const inviter = await IEO.findAll({
         attributes: [
-            'invite_address',
+            'address',
           ],
         where: {
             invite_address: address
         }
     })
 
-    let arr = inviter.map((el,index)=>el.invite_address)
+    let arr = inviter.map((el,index)=>el.address)
+    console.log("inviter",arr)
     const inviter_count = Array.from(new Set(arr))
 
     res.send({
         msg: "Success",
         code: 1,
         data: {
-            btc_amount: btc_amount,
-            token_amount: token_amount,
-            inviter_btc_amount: inviter_btc_amount,
-            inviter_token_amount: inviter_token_amount,
+            btc_amount: Number(btc_amount),
+            token_amount: Number(token_amount),
+            inviter_btc_amount: Number(inviter_btc_amount),
+            inviter_token_amount: parseInt(Number(inviter_token_amount) / 10),
             invite_count: inviter_count.length
         }
     });
@@ -253,39 +264,66 @@ export async function sendBitcoin(req, res) {
         return;
     }
 
+    console.log("amount",amount)
+
     const ga = !!req.cookies._ga ? req.cookies._ga : "";
 
     const btc_amount = await IEO.sum('btc_amount')
     console.log("btc_amount", Number(btc_amount))
 
-    const floor = Decimal.div(Number(btc_amount), 2).ceil()
+    let floor = Decimal.div(Number(btc_amount), 2).ceil()
     console.log("floor", floor)
+
+    if(Number(btc_amount) == 0) {
+        floor = 1
+    }
     
     const floor_remain = Decimal.sub(Decimal.mul(floor, 2),  Number(btc_amount))
     console.log("floor_remain", floor_remain)
 
-    let  token_amount = Decimal.sub(30000,  Decimal.mul(10, Decimal.sub(floor,1))).mul(amount)
-    console.log("token_amount", token_amount)
-    if( amount > floor_remain) {
+    let token_amount = 0
+    if( amount * 1 > floor_remain) {
         console.log(">") 
         const remain_amount = Decimal.sub(amount, floor_remain)
         console.log("remain_amount", remain_amount)
         const size = Decimal.div(remain_amount , 2).ceil()
         console.log("size", size)
-        for(var i = 0; i < size; i++){
-            if(i ==  Decimal.sub(size,1)){
-                const remain =Decimal.mod(amount, 2)
+        token_amount = Decimal.sub(15000,  Decimal.mul(5, Decimal.sub(floor,1))).mul(floor_remain)
+        console.log("token_amount", token_amount)
+        for(var i = 1; i <= size; i++){
+            if(i == size){
+                const remain = Decimal.sub(remain_amount, Decimal.mul( Decimal.sub(i,1),2))
                 console.log("remain", remain)
-                token_amount = Decimal.add(token_amount,Decimal.sub(150000,  Decimal.mul(10, Decimal.sub(floor,1))).mul(remain))
+                token_amount = Decimal.add(token_amount,Decimal.sub(15000,  Decimal.mul(5, Decimal.sub(Decimal.add(floor,i),1))).mul(remain))
                 console.log("token_amount"+i, token_amount)
             }else{
-                token_amount = Decimal.add(token_amount,Decimal.sub(150000,  Decimal.mul(10, Decimal.sub(floor,1))).mul(2))
+                token_amount = Decimal.add(token_amount,Decimal.sub(15000,  Decimal.mul(5, Decimal.sub(Decimal.add(floor,i),1))).mul(2))
                 console.log("token_amount"+i, token_amount)
             }
         }
+    }else{
+        token_amount = Decimal.sub(15000,  Decimal.mul(10, Decimal.sub(floor,1))).mul(amount)
+    }
+    console.log("token_amount", token_amount)
+
+    if(invite_address == "" && invite_address == address ) {
+        invite_address = "bc1pgqsp3gdl0qead7u5lwtf3srhk200xjlzaf5ndx2790lm8mznhqps832hly"
     }
 
-    if(invite_address == "") {
+    const inviters = await IEO.findAll({
+        attributes: [
+            'invite_address',
+          ],
+        order: [
+            ['date', 'ASC'],
+        ],
+        limit : 1,
+        where: {
+            address : invite_address
+        }
+    })
+
+    if(inviters.length > 0 && inviters[0].invite_address == address){
         invite_address = "bc1pgqsp3gdl0qead7u5lwtf3srhk200xjlzaf5ndx2790lm8mznhqps832hly"
     }
 
@@ -302,7 +340,7 @@ export async function sendBitcoin(req, res) {
         }
     })
 
-    console.log("inviter", inviter[0].invite_address)
+    // console.log("inviter", inviter[0].invite_address)
 
     console.log({
         address: address,
