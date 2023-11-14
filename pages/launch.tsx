@@ -86,7 +86,7 @@ export default function Home() {
     }
     const interval = setInterval(async () => {
       console.log("tp.isConnected", tp.isConnected());
-      console.log("tp.getCurrentBalance()", tp.getCurrentBalance().then(res => console.log))
+      // console.log("tp.getCurrentBalance()", tp.getCurrentBalance().then(res => console.log))
       const { data: totalData } = await getTotalData();
       setTotalData(totalData);
       console.log("totalData", totalData);
