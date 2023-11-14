@@ -333,7 +333,11 @@ export default function Home() {
               </p>
             </div>
             <div className=" bg-[url('/ieo_border.png')] bg-no-repeat bg-[length:100%_100%] px-8 sm:px-6 py-8 mt-4">
-              <p className="font-[digitalists] flex justify-between text-base">
+            <p className="font-[digitalists] flex justify-between text-base ">
+                <span>My inviter</span>
+                <span>{formatAddress(inviteAddress)}</span>
+              </p>
+              <p className="font-[digitalists] flex justify-between text-base  pt-4 sm:pt-10">
                 <span>Number of invitees</span>
                 <span>{myData.inviter_btc_amount} BTC</span>
               </p>
