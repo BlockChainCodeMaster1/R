@@ -111,17 +111,19 @@ export default function Home() {
   const getMyDataList = async() => {
     if(!!account){
       setShowMyDataList(true)
+      setShowInviteMyDataList(false)
       const {data:myDataList} = await getFloorDataByAddress(account)
       console.log("myDataList", myDataList)
       setMyDataList(myDataList)
     }else{
-      toast('💰 Please Connect wallet', config);
+      toast('❌ Please Connect wallet', config);
     }
   }
 
   const getMyInviteDataList = async() => {
     if(!!account){
       setShowInviteMyDataList(true)
+      setShowMyDataList(false)
       const {data:myInviteDataList} = await getInviteDataByAddress(account)
       console.log("myInviteDataList", myInviteDataList)
       setMyInviteDataList(myInviteDataList)
@@ -217,7 +219,7 @@ export default function Home() {
             </li>)}
         </ul>
       </div>}
-      <main className="text-white   bg-no-repeat bg-top_center text-center bg-[length:100%_auto] pb-20">
+      <main className="text-white   bg-no-repeat bg-top_center text-center bg-[length:100%_auto] pb-40">
         <video
           className="fixed top-0 -z-20 object-cover w-full h-full opacity-70"
           autoPlay
@@ -252,9 +254,9 @@ export default function Home() {
         </div>
         <div className="sm-11/12 sm:w-8/12 mx-auto flex gap-4 sm:flex-row flex-col">
           <div className="w-10/12 mx-auto sm:w-6/12 ">
-            <div className=" bg-[url('/ieo_border.png')] bg-no-repeat bg-[length:100%_100%] px-8 sm:px-12 py-8 ">
+            <div className=" bg-[url('/ieo_border.png')] bg-no-repeat bg-[length:100%_100%] px-8 sm:px-6 py-8 ">
               <ul className=" sm:text-left flex gap-8 sm:flex-row flex-col  text-center">
-                <li className="font-[digitalists] ">
+                <li className="font-[digitalists] w-12/12 sm:w-6/12">
                   <h1>Exchange ratio</h1>
                   <p className=" text-2xl pb-4">1 <span className=" text-[#ff7700] text-base">₿</span> = {30000 - (Math.floor(totalData.btc_amount/2)*10)} <span className=" text-[#ff0000] text-base">REVS</span></p>
                   <h1>My total investment</h1>
@@ -262,7 +264,7 @@ export default function Home() {
                   <h1>Tokens available</h1>
                   <p className=" text-2xl  pb-4">{myData.token_amount} <span className=" text-[#ff0000] text-base">REVS</span></p>
                 </li>
-                <li className=" relative w-62 h-28 mt-0 sm:mt-10 mb-10 sm:mb-0 flex justify-center sm:block ">
+                <li className=" relative w-62 h-28 mt-0 sm:mt-10 mb-10 sm:mb-0 flex justify-center sm:block w-12/12 sm:w-6/12 ">
                     <div className="text-xs absolute top-8 sm:left-16 left-22 text-center z-30">
                         <h1>{totalData.btc_amount.toFixed(4)} Btc</h1>
                         <p>({Math.ceil(totalData.btc_amount/2)}/3000)floor</p>
@@ -315,7 +317,7 @@ export default function Home() {
                 </button>
               </p>
             </div>
-            <div className=" bg-[url('/ieo_border.png')] bg-no-repeat bg-[length:100%_100%] px-8 sm:px-12 py-8 mt-4">
+            <div className=" bg-[url('/ieo_border.png')] bg-no-repeat bg-[length:100%_100%] px-8 sm:px-6 py-8 mt-4">
               <p className="font-[digitalists] flex justify-between text-base">
                 <span>Number of invitees</span>
                 <span>{myData.inviter_btc_amount} BTC</span>
@@ -366,7 +368,7 @@ export default function Home() {
                 Top 10 Luckey Rankings
               </button>
             </div>
-            <div className=" bg-[url('/rank_border.png')] bg-no-repeat bg-[length:100%_100%]  px-8 sm:px-12 py-1 min-h-[54.5rem]">
+            <div className=" bg-[url('/rank_border.png')] bg-no-repeat bg-[length:100%_100%]  px-8 sm:px-6 py-1 min-w-fit sm:min-h-[54.5rem]">
               { tabIndex == 0 && <>
                 <p className="font-[digitalists] flex justify-between pt-0 sm:pt-6 text-base">
                 <span className="text-[#ff0000] text-xs sm:text-base">
@@ -395,6 +397,7 @@ export default function Home() {
                 </span>
               </p>
               <ul>
+                
                 {rankData.length > 0  ?  rankData.map((el, index) => (
                   <li
                     key={index}
@@ -426,8 +429,7 @@ export default function Home() {
                       {el["amount"]}
                     </span>
                   </li>
-                )):<li>
-                  <img src="/no_data.png" className=" w-full my-5 h-full"/>
+                )):<li className=" my-4 bg-[url('/no_data.png')] bg-no-repeat bg-[length:100%_100%] sm:min-h-[48.5rem]">
                 </li>
                 }
               </ul>
@@ -436,7 +438,7 @@ export default function Home() {
               <>
               <p className="font-[digitalists] flex justify-between pt-0 sm:pt-6 text-base">
                 <span className="text-[#ff0000] text-xs sm:text-base">
-                  Top 10 Invitation Fundraising Rankings
+                  Top 10 Luckey Rankings
                 </span>
                 <span className="text-xs sm:text-base flex justify-center items-center">
                   <i onClick={async()=>{
@@ -491,9 +493,8 @@ export default function Home() {
                       {el["amount"]}
                     </span>
                   </li>
-                )):<li>
-                <img src="/no_data.png" className=" w-full my-5 h-full" />
-              </li> 
+                )):<li className=" my-4 bg-[url('/no_data.png')] bg-no-repeat bg-[length:100%_100%] sm:min-h-[48.5rem]">
+                </li> 
                 }
               </ul> 
               </>}
