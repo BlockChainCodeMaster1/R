@@ -376,7 +376,7 @@ export default function Home() {
                 View my data
                 </button>
                 <button onClick={()=>getMyInviteDataList()} className="text-xs text-[#ff0000] border border-[#ff0000] w-1/2 py-4 border-l-4 uppercase">
-                View my invitee's data
+                View my invitee&apos;s data
                 </button>
               </p>
               <p className="font-[digitalists] flex justify-between text-base mt-4">
