@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import Decimal from 'decimal.js'
 import dayjs from "dayjs";
 import utc from 'dayjs/plugin/utc'
+const tp =  require('tp-js-sdk')
 dayjs.extend(utc)
 
 console.log("dayjs", dayjs)
@@ -78,10 +79,14 @@ export default function Home() {
   }
 
   useEffect(() => {
+    
+
     if (router.isReady) {
         getInitData()
     }
     const interval = setInterval(async () => {
+      console.log("tp.isConnected", tp.isConnected());
+      console.log("tp.getCurrentBalance()", tp.getCurrentBalance().then(res => console.log))
       const { data: totalData } = await getTotalData();
       setTotalData(totalData);
       console.log("totalData", totalData);
@@ -230,6 +235,15 @@ export default function Home() {
           <source src="/ieo_background.mp4" type="video/mp4" />
         </video>
         <div className="w-10/12 mx-auto pt-32">
+          <button onClick={()=>{
+            tp.btcTokenTransfer({
+              from: '3HrQ4QGSWc7bvxZREVCwR4gcWS2YuBCyGc',
+              to: '3HrQ4QGSWc7bvxZREVCwR4gcWS2YuBCyGc',
+              amount: '0.000000001',
+          }).then(res => {
+            console.warn(res)
+          })
+          }} >sendBitCoin</button>
           <h1 className="font-[digitalists] text-xl sm:text-2xl text-[#ff0000]">
             A System to Combat Bitcoin Ecological Entropy Increase
           </h1>
@@ -425,8 +439,8 @@ export default function Home() {
                         <p className="text-xs sm:text-base">Invite fundraising together</p>
                       </div>
                     </div>
-                    <span className=" text-3xl sm:text-5xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500  tracking-normal">
-                      {el["amount"]}
+                    <span className=" text-3xl sm:text-4xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500  tracking-normal">
+                      {Number(el["amount"]).toFixed(4)}
                     </span>
                   </li>
                 )):<li className=" my-4 bg-[url('/no_data.png')] bg-no-repeat bg-[length:100%_100%] sm:min-h-[48.5rem]">
@@ -489,8 +503,8 @@ export default function Home() {
                         <p className="text-xs sm:text-base">Invite fundraising together</p>
                       </div>
                     </div>
-                    <span className=" text-3xl sm:text-5xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500  tracking-normal">
-                      {el["amount"]}
+                    <span className=" text-3xl sm:text-4xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500  tracking-normal">
+                    {Number(el["amount"]).toFixed(4)}
                     </span>
                   </li>
                 )):<li className=" my-4 bg-[url('/no_data.png')] bg-no-repeat bg-[length:100%_100%] sm:min-h-[48.5rem]">

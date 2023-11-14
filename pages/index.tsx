@@ -75,12 +75,12 @@ export default function Home() {
             </div>
           </div>
           <div className=" bg-[#ff0000]">
-            <div className=" w-12/12 sm:w-8/12 mx-auto flex relative sm:py-8 pt-14 pb-4 sm:pb-4 justify-start sm:justify-end flex-row  pl-4">
+            <div className=" w-12/12 sm:w-8/12 mx-auto flex relative sm:py-8 pt-14 pb-4 sm:pb-4 justify-start sm:justify-end flex-row  overflow-hidden  sm:overflow-visible  pl-4">
               <img
                 src="/mode.png"
-                className="w-8/12 sm:w-[30%] absolute -right-20 sm:left-0 top-0 sm:top-auto sm:bottom-0 animate-[bounce_5s_linear_infinite]"
+                className="w-8/12 sm:w-[30%] absolute -right-20 sm:left-0 top-20 sm:top-auto sm:bottom-0 animate-[bounce_5s_linear_infinite]"
               />
-              <div className="w-9/12 sm:w-8/12">
+              <div className="w-9/12 sm:w-8/12 sm:relative z-10">
                 <h1 className="font-[digitalists] text-base sm:text-3xl whitespace-nowrap">
                   REVS Resonance V Pool Mechanism Introduction
                 </h1>
@@ -104,7 +104,7 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className=" bg-[url('/tokenomics_bg.png')] bg-no-repeat bg-center bg-cover py-10 sm:pt-20 sm:pb-40 sm:w-11/12 mx-auto">
+          <div className=" bg-[url('/tokenomics_bg.png')] bg-no-repeat bg-center bg-cover py-10 sm:pt-20 sm:pb-40 pb-32 sm:w-11/12 mx-auto">
             <h1>
               <img
                 src="/token_title.png"
