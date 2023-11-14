@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { toast } from 'react-toastify';
+const tp =  require('tp-js-sdk')
 
 const config:Object = 
 {
@@ -89,10 +90,34 @@ export default function Header() {
         toast('🚀 Connect success!', config);
         (window as any).account = {
           unisat : "",
-          okx: accounts['address']
+          okx: accounts['address'],
+          tp: ""
       }
         setAccount(accounts['address'])
         console.log(accounts);
+      } catch (e) {
+        console.log(e);
+        toast('❌ Connect failed', config);
+      }
+    }
+  }
+
+  const connectTPWallet = async () => {
+    if (!tp.isConnected()) {
+      toast('❌ TP Wallet is not Connect!', config);
+    }else{
+      try {
+        setShowDialog(false)
+        await tp.getWallet({walletTypes: [ 'btc'], switch: false})
+        const {data} = await tp.getCurrentWallet()
+        toast('🚀 Connect success!', config);
+        (window as any).account = {
+          unisat : "",
+          okx: "",
+          tp: data.address
+        }
+        alert(data.address)
+        setAccount(data.address)
       } catch (e) {
         console.log(e);
         toast('❌ Connect failed', config);
@@ -152,6 +177,10 @@ export default function Header() {
               <li className=" cursor-pointer" onClick={() => connectOKXWallet() }>
                 <img src="/okx.png" className=" w-12 m-auto"  />
                 <p className=" py-4 text-xs sm:text-base">OKX Wallet</p>
+              </li>
+              <li className=" cursor-pointer" onClick={() => connectTPWallet() }>
+                <img src="/tp.png" className=" w-12 m-auto"  />
+                <p className=" py-4 text-xs sm:text-base">TP Wallet</p>
               </li>
             </ul> 
         </div>

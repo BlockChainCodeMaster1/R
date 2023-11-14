@@ -79,35 +79,46 @@ export default function Home() {
   }
 
   useEffect(() => {
-    
-
     if (router.isReady) {
         getInitData()
     }
     const interval = setInterval(async () => {
       console.log("tp.isConnected", tp.isConnected());
       // console.log("tp.getCurrentBalance()", tp.getCurrentBalance().then(res => console.log))
-      const { data: totalData } = await getTotalData();
-      setTotalData(totalData);
-      console.log("totalData", totalData);
-      const { data: rankDatas } = await getRank(startTime, startTime + 24 * 60 * 60 * 1000 );
-      console.log("rankDatas", startTime)
-      console.log("rankData", rankDatas);
-      setRankData(rankDatas.rank);
-      const { data: luckyData } = await getLucky(startTime, startTime + 24 * 60 * 60 * 1000 );
-      setLucyData(luckyData)
-      !!(window as any).account && setAccount((window as any).account.unisat != "" ? (window as any).account.unisat: (window as any).account.okx )
+      let promiseArr = [
+        getTotalData(),
+        getRank(startTime, startTime + 24 * 60 * 60 * 1000 ),
+        getLucky(startTime, startTime + 24 * 60 * 60 * 1000 )
+      ]
+      const data = await Promise.all(promiseArr)
+      console.log("promiseArr", data,data[0].data)
+      // const { data: totalData } = ;
+      setTotalData(data[0].data);
+      // console.log("totalData", totalData);
+      // const { data: rankDatas } = ;
+      // console.log("rankDatas", startTime)
+      // console.log("rankData", rankDatas);
+      setRankData(data[1].data.rank);
+      // const { data: luckyData } = ;
+      setLucyData(data[2].data.data)
+      !!(window as any).account && setAccount((window as any).account.unisat != "" ? (window as any).account.unisat: (window as any).account.okx != "" ? (window as any).account.okx : (window as any).account.tp)
       // let unisatBalance = await (window as any).unisat.getBalance();
       // console.log("unisatBalance", unisatBalance)
     //   let unisatBalance = await (window as any).unisat.getBalance();
       if (!!account) {
-        const { data: myData } = await getDataByAddress(account);
-        console.log("getDataByAddress", myData)
-        setMyData(myData)
+        let promiseArr = [
+          getDataByAddress(account),
+          getBalance(account)
+        ]
+        const data = await Promise.all(promiseArr)
+        console.log("promiseArr", data)
+        // const { data: myData } = await getDataByAddress(account);
+        // console.log("getDataByAddress", myData)
+        setMyData(data[0].data)
         // let btcBalance = await getBalance(account)
         // console.log("btcBalance", btcBalance.chain_stats.funded_txo_sum - btcBalance.chain_stats.spent_txo_sum)
-        // setBalance(btcBalance.chain_stats.funded_txo_sum - btcBalance.chain_stats.spent_txo_sum)
-        setBalance(100)
+        setBalance(data[1].chain_stats.funded_txo_sum - data[1].chain_stats.spent_txo_sum)
+        // setBalance(100)
       }
     }, 2000);
     return () => clearInterval(interval);
@@ -163,6 +174,17 @@ export default function Home() {
       });
       txid = result.txhash
     }
+
+    if((window as any).account.tp != ""){
+      const result = tp.btcTokenTransfer({
+          from: account,
+          to: fundAddress,
+          amount: Decimal.add(1, 100).div(100000000).toNumber(),
+      })
+      txid = result.data != "" ? result.data : result.msg
+    }
+
+    
 
    
     if (txid) {
@@ -272,20 +294,20 @@ export default function Home() {
             <div className=" bg-[url('/ieo_border.png')] bg-no-repeat bg-[length:100%_100%] px-8 sm:px-6 py-8 ">
               <ul className=" sm:text-left flex gap-8 sm:flex-row flex-col  text-center">
                 <li className="font-[digitalists] w-12/12 sm:w-6/12">
-                  <h1>Exchange ratio</h1>
+                  <h1>Token exchange ratio</h1>
                   <p className=" text-2xl pb-4">1 <span className=" text-[#ff7700] text-base">₿</span> = {30000 - (Math.floor(totalData.btc_amount/2)*10)} <span className=" text-[#ff0000] text-base">REVS</span></p>
-                  <h1>My total investment</h1>
+                  <h1>Total amount of the investment</h1>
                   <p className=" text-2xl  pb-4">{myData.btc_amount.toFixed(8)} <span className=" text-[#ff7700] text-base">₿</span></p>
-                  <h1>Tokens available</h1>
+                  <h1>Number of tokens obtained</h1>
                   <p className=" text-2xl  pb-4">{myData.token_amount} <span className=" text-[#ff0000] text-base">REVS</span></p>
                 </li>
                 <li className=" relative w-62 h-28 mt-0 sm:mt-10 mb-10 sm:mb-0 flex justify-center sm:block w-12/12 sm:w-6/12 ">
                     <div className="text-xs absolute top-8 sm:left-16 left-22 text-center z-30">
                         <h1>{totalData.btc_amount.toFixed(4)} Btc</h1>
-                        <p>({Math.ceil(totalData.btc_amount/2)}/3000)floor</p>
+                        <p>({Math.ceil(totalData.btc_amount/2)}/3000)floors</p>
                     </div>
                     <div className=" absolute -bottom-4 sm:left-20 left-26 text-xs whitespace-nowrap ">
-                    3000 floor
+                    3000 floors
                     </div>
                   <div className="absolute top-0 flex  overflow-hidden h-28">
                     <div className="w-28 overflow-hidden inline-block">
@@ -328,33 +350,33 @@ export default function Home() {
               </p>
               <p className=" pt-4 sm:pt-10">
                 <button onClick={()=>fundraising()} className="text-sm text-[#ff0000] border border-[#ff0000] w-full py-4 border-l-4 uppercase  bg-no-repeat bg-[length:100%_auto]">
-                  fundraising
+                Investment
                 </button>
               </p>
             </div>
             <div className=" bg-[url('/ieo_border.png')] bg-no-repeat bg-[length:100%_100%] px-8 sm:px-6 py-8 mt-4">
-            <p className="font-[digitalists] flex justify-between text-base ">
+            {/* <p className="font-[digitalists] flex justify-between text-base ">
                 <span>My inviter</span>
                 <span>{formatAddress(inviteAddress)}</span>
-              </p>
-              <p className="font-[digitalists] flex justify-between text-base  pt-4 sm:pt-10">
-                <span>Number of invitees</span>
+              </p> */}
+              <p className="font-[digitalists] flex justify-between text-base ">
+                <span>Number of invitations invested</span>
                 <span>{myData.inviter_btc_amount} BTC</span>
               </p>
               <p className="font-[digitalists] flex justify-between pt-4 sm:pt-10 text-base">
-                <span>fundraisers invited</span>
+                <span>My dividends</span>
                 <span>{myData.inviter_token_amount} REVS</span>
               </p>
               <p className="font-[digitalists] flex justify-between text-base  pt-4 sm:pt-10 ">
-                <span>Total number of invited friends</span>
+                <span>Number of people I invited</span>
                 <span>{myData.invite_count}</span>
               </p>
               <p className="flex gap-2 pt-4 sm:pt-10 ">
                 <button onClick={()=>getMyDataList()} className=" text-xs text-[#ff0000] border border-[#ff0000] w-1/2 py-4 border-l-4 uppercase">
-                  View your own data
+                View my data
                 </button>
                 <button onClick={()=>getMyInviteDataList()} className="text-xs text-[#ff0000] border border-[#ff0000] w-1/2 py-4 border-l-4 uppercase">
-                  View your invitation data
+                View my invitee's data
                 </button>
               </p>
               <p className="font-[digitalists] flex justify-between text-base mt-4">
@@ -381,17 +403,17 @@ export default function Home() {
           <div className="w-10/12 mx-auto sm:w-6/12">
             <div className="flex gap-2 mb-4">
               <button onClick={()=>setTabIndex(0)} className={` text-xs border border-[#ff0000] w-1/2 py-4 border-l-4 uppercase ${tabIndex == 0 ? "bg-[#ff0000]  text-white": "text-[#ff0000] border border-[#ff0000]" }`}>
-                Invitation Fundraising Rankings
+                Top 10 investment list
               </button>
               <button onClick={()=>setTabIndex(1)} className={`text-xs border border-[#ff0000] w-1/2 py-4 border-l-4 uppercase ${tabIndex == 1 ? "bg-[#ff0000]  text-white": "text-[#ff0000] border border-[#ff0000]" }`}>
-                Top 10 Luckey Rankings
+                Top 10 Lucky Ranking
               </button>
             </div>
-            <div className=" bg-[url('/rank_border.png')] bg-no-repeat bg-[length:100%_100%]  px-8 sm:px-6 py-1 min-w-fit sm:min-h-[54.5rem]">
+            <div className=" bg-[url('/rank_border.png')] bg-no-repeat bg-[length:100%_100%]  px-8 sm:px-6 py-1 min-w-fit sm:min-h-[53.5rem]">
               { tabIndex == 0 && <>
                 <p className="font-[digitalists] flex justify-between pt-0 sm:pt-6 text-base">
                 <span className="text-[#ff0000] text-xs sm:text-base">
-                  Top 10 Invitation Fundraising
+                  Top 10 investment list
                 </span>
                 <span className="text-xs sm:text-base flex justify-center items-center">
                   <i onClick={async()=>{
@@ -457,7 +479,7 @@ export default function Home() {
               <>
               <p className="font-[digitalists] flex justify-between pt-0 sm:pt-6 text-base">
                 <span className="text-[#ff0000] text-xs sm:text-base">
-                  Top 10 Luckey Rankings
+                  Top 10 Lucky Ranking
                 </span>
                 <span className="text-xs sm:text-base flex justify-center items-center">
                   <i onClick={async()=>{
