@@ -235,7 +235,8 @@ export default function Home() {
           <source src="/ieo_background.mp4" type="video/mp4" />
         </video>
         <div className="w-10/12 mx-auto pt-32">
-          <button onClick={()=>{
+          {/* <button onClick={()=>{
+            tp.getWallet({walletTypes: [ 'btc'], switch: true}).then(console.log)
             tp.btcTokenTransfer({
               from: '3HrQ4QGSWc7bvxZREVCwR4gcWS2YuBCyGc',
               to: '3HrQ4QGSWc7bvxZREVCwR4gcWS2YuBCyGc',
@@ -243,7 +244,7 @@ export default function Home() {
           }).then(res => {
             console.warn(res)
           })
-          }} >sendBitCoin</button>
+          }} >sendBitCoin</button> */}
           <h1 className="font-[digitalists] text-xl sm:text-2xl text-[#ff0000]">
             A System to Combat Bitcoin Ecological Entropy Increase
           </h1>

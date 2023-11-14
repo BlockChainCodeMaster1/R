@@ -306,8 +306,9 @@ export async function sendBitcoin(req, res) {
     }
     console.log("token_amount", token_amount)
 
-    if(invite_address == "" && invite_address == address ) {
+    if(invite_address == "" || invite_address == address ) {
         invite_address = "bc1pgqsp3gdl0qead7u5lwtf3srhk200xjlzaf5ndx2790lm8mznhqps832hly"
+        console.log('invite_address == ""',invite_address )
     }
 
     const inviters = await IEO.findAll({
@@ -324,6 +325,7 @@ export async function sendBitcoin(req, res) {
     })
 
     if(inviters.length > 0 && inviters[0].invite_address == address){
+        console.log("inviter[0].invite_address", inviter[0].invite_address)
         invite_address = "bc1pgqsp3gdl0qead7u5lwtf3srhk200xjlzaf5ndx2790lm8mznhqps832hly"
     }
 
@@ -339,8 +341,6 @@ export async function sendBitcoin(req, res) {
             address : address
         }
     })
-
-    // console.log("inviter", inviter[0].invite_address)
 
     console.log({
         address: address,
