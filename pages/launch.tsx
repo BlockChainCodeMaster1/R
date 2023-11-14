@@ -362,13 +362,13 @@ export default function Home() {
               </p>
               <p className=" relative">
                 <input
-                  value={`https://revs.network/?invite=${account}`}
+                  value={`https://revs.network/launch?invite=${account}`}
                   type="text"
                   readOnly
                   className="border border-[#FF0000] bg-transparent w-full my-4 text-xs sm:text-base outline-none p-4"
                 />
                  <CopyToClipboard
-                  text={`https://revs.network/?invite=${account}`}
+                  text={`https://revs.network/launch?invite=${account}`}
                   onCopy={() => toast('🚀 Copy success!', config)}
                 >
                     <button className=" absolute bg-[#ff0000] cursor-pointer right-2 top-6 px-6 py-2 text-xs sm:text-base">
