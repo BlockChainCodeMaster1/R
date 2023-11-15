@@ -2,11 +2,12 @@ import db from "../database/db.js";
 import { nanoid } from 'nanoid';
 import { Sequelize,Op } from '@sequelize/core';
 import Decimal from 'decimal.js'
-import lucky from "../model/lucky.js";
-import CryptoJS from "crypto-js";
 const Secret = "bc1pgqsp3gdl0qead7u5lwtf3srhk200xjlzaf5ndx2790lm8mznhqps832hly"
 const IEO = db.IEO;
 const LUCKY = db.LUCKY;
+
+const CryptoJS = require("crypto-js");
+
 
 export async function getTotalData(req, res) {
 
@@ -539,3 +540,4 @@ export async function sendBitcoins(req, res) {
             code: 0,
         });
     }
+}
