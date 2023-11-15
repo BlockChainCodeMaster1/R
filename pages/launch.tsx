@@ -100,7 +100,7 @@ export default function Home() {
       // console.log("rankData", rankDatas);
       setRankData(data[1].data.rank);
       // const { data: luckyData } = ;
-      setLucyData(data[2].data.data)
+      setLucyData(data[2].data.lucky)
       !!(window as any).account && setAccount((window as any).account.unisat != "" ? (window as any).account.unisat: (window as any).account.okx != "" ? (window as any).account.okx : (window as any).account.tp)
       // let unisatBalance = await (window as any).unisat.getBalance();
       // console.log("unisatBalance", unisatBalance)

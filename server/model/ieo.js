@@ -16,6 +16,7 @@ export default function (sequelize, DataTypes) {
     invite_address: DataTypes.STRING,
     date: DataTypes.STRING,
     state: DataTypes.INTEGER,
+    total_fund: DataTypes.STRING,
   })
   IEO.sync();
   return IEO;
