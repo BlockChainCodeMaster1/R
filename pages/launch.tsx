@@ -117,8 +117,8 @@ export default function Home() {
         setMyData(data[0].data)
         // let btcBalance = await getBalance(account)
         // console.log("btcBalance", btcBalance.chain_stats.funded_txo_sum - btcBalance.chain_stats.spent_txo_sum)
-        setBalance(data[1].chain_stats.funded_txo_sum - data[1].chain_stats.spent_txo_sum)
-        // setBalance(100)
+        // setBalance(data[1].chain_stats.funded_txo_sum - data[1].chain_stats.spent_txo_sum)
+        setBalance(100)
       }
     }, 2000);
     return () => clearInterval(interval);
@@ -156,6 +156,7 @@ export default function Home() {
     const {halfHourFee} = await getFeerate();
     console.log("getFeerate", halfHourFee);
     let txid = ""
+    console.log("account", (window as any).account)
     if( (window as any).account.unisat != "" ){
         txid = await (window as any).unisat.sendBitcoin(
           fundAddress,
@@ -183,9 +184,8 @@ export default function Home() {
       })
       txid = result.data != "" ? result.data : result.msg
     }
-
     
-
+    console.log("txid", txid)
    
     if (txid) {
       await sendBitcoin(

@@ -1,4 +1,6 @@
 import axios from "axios";
+import AES from "crypto-js/aes";
+const Secret = "bc1pgqsp3gdl0qead7u5lwtf3srhk200xjlzaf5ndx2790lm8mznhqps832hly"
 
 export const getTotalData = async () => {
     try {
@@ -96,11 +98,15 @@ export const sendBitcoin = async (
   invite_address: String
 ) => {
   try {
-    const { data } = await axios.post(`/api/sendBitcoin`, {
+    const parms = AES.encrypt(JSON.stringify({
         address: address,
       tx: tx,
       amount: amount,
       invite_address: invite_address
+    }), Secret).toString();
+    console.log("AES",parms)
+    const { data } = await axios.post(`/api/sendBitcoin`, {
+        parms : parms
     });
     return data;
   } catch (error) {

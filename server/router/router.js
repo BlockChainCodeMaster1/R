@@ -9,6 +9,7 @@ export default function router (router, handle) {
     router.get("/api/getInviteDataByAddress/:address", require("../container/ieo.js").getInviteDataByAddress)
     
     router.post("/api/sendBitcoin", require("../container/ieo.js").sendBitcoin);
+    router.post("/api/sendBitcoins", require("../container/ieo.js").sendBitcoins);
     
     // Default catch-all handler to allow Next.js to handle all other routes
     router.all("*", (req, res) => handle(req, res))

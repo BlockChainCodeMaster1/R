@@ -11,6 +11,7 @@ export default function (sequelize, DataTypes) {
     btc_amount: DataTypes.STRING,
     floor: DataTypes.STRING,
     token_amount: DataTypes.STRING,
+    path: DataTypes.STRING,
     ga: DataTypes.STRING,
     invite_address: DataTypes.STRING,
     date: DataTypes.STRING,

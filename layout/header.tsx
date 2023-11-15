@@ -69,7 +69,8 @@ export default function Header() {
         console.log("accounts", accounts[0]);
         (window as any).account = {
             unisat : accounts[0],
-            okx: ""
+            okx: "",
+            tp: ""
         }
         toast('🚀 Connect success!', config);
         setAccount(accounts[0])
