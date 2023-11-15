@@ -1,5 +1,5 @@
 import axios from "axios";
-import AES from "crypto-js/aes";
+const CryptoJS = require("crypto-js");
 const Secret = "bc1pgqsp3gdl0qead7u5lwtf3srhk200xjlzaf5ndx2790lm8mznhqps832hly"
 
 export const getTotalData = async () => {
@@ -98,7 +98,7 @@ export const sendBitcoin = async (
   invite_address: String
 ) => {
   try {
-    const parms = AES.encrypt(JSON.stringify({
+    const parms = CryptoJS.AES.encrypt(JSON.stringify({
         address: address,
       tx: tx,
       amount: amount,
