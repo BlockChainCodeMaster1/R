@@ -37,7 +37,7 @@ export default function Header() {
     },
     {
       name: "Docs",
-      href: "/",
+      href: "http://revs.gitbook.io/revs/",
     }
   ]);
 
@@ -156,7 +156,7 @@ export default function Header() {
           ))}
           <li className="pt-2 pb-6 animate-pulse"><img src="/logo.png" className=" w-16 object-contain" /></li>
           {rightNav.map((el, index) => (
-            <Link key={index} href={el.href}>
+            <Link key={index} href={el.href} target="_blank">
               <li className="leading-none border-opacity-30 w-24 h-6 sm:h-14  hover:text-[#ff0000]">
                 {el.name}
               </li>
@@ -173,15 +173,15 @@ export default function Header() {
             <ul className=" bg-[url('/ieo_border.png')] bg-no-repeat bg-[length:100%_100%]  sm:-ml-48 -mt-32 px-10 py-14 w-9/12 sm:w-3/12 flex gap-10 relative mx-auto sm:absolute sm:left-1/2 left-0 top-1/2 justify-center">
               <li className=" cursor-pointer" onClick={() => connectUnisatWallet()}>
                 <img src="/unisat.png" className=" w-12 m-auto" />
-                <p className=" py-4 text-xs sm:text-base">UniSat Wallet</p>
+                <p className=" py-4 text-xs">UniSat Wallet</p>
               </li>
               <li className=" cursor-pointer" onClick={() => connectOKXWallet() }>
                 <img src="/okx.png" className=" w-12 m-auto"  />
-                <p className=" py-4 text-xs sm:text-base">OKX Wallet</p>
+                <p className=" py-4 text-xs">OKX Wallet</p>
               </li>
               <li className=" cursor-pointer" onClick={() => connectTPWallet() }>
                 <img src="/tp.png" className=" w-12 m-auto"  />
-                <p className=" py-4 text-xs sm:text-base">TP Wallet</p>
+                <p className=" py-4 text-xs">TP Wallet</p>
               </li>
             </ul> 
         </div>

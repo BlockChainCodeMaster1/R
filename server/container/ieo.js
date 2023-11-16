@@ -2,6 +2,10 @@ import db from "../database/db.js";
 import { nanoid } from 'nanoid';
 import { Sequelize,Op } from '@sequelize/core';
 import Decimal from 'decimal.js'
+import dayjs from "dayjs";
+import utc from 'dayjs/plugin/utc'
+
+dayjs.extend(utc)
 const Secret = "bc1pgqsp3gdl0qead7u5lwtf3srhk200xjlzaf5ndx2790lm8mznhqps832hly"
 const IEO = db.IEO;
 const LUCKY = db.LUCKY;
@@ -256,147 +260,37 @@ export async function getInviteDataByAddress(req, res) {
 
 }
 
+export async function getInviteRank(req, res) {
+    const { day } = req.params;
+    const rank = await IEO.findAll({
+        attributes: [
+            'address',
+            `total_fund${day}`
+          ],
+        order: [
+            [`total_fund${day}` , 'DESC'],
+        ],
+        limit : 10,
+    })
+
+    console.log("rank", rank)
+
+    res.send({
+        msg: "Success",
+        code: 1,
+        data: {
+            rank : rank
+        }
+    });
+}
+
 export async function sendBitcoin(req, res) {
     let { parms } = req.body;
     const bytes  = CryptoJS.AES.decrypt(parms, Secret);
     const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
     console.log("decryptedData", decryptedData)
     let { address, tx, amount, invite_address } = decryptedData;
-    console.log(address, tx, amount, invite_address)
-    if (!address || !tx || !amount  ) {
-        res.send({
-        msg: "Incomplete parameter",
-        code: 0,
-        });
-        return;
-    }
-
-    console.log("amount",amount)
-
-    const ga = !!req.cookies._ga ? req.cookies._ga : "";
-
-    const btc_amount = await IEO.sum('btc_amount')
-    console.log("btc_amount", Number(btc_amount))
-
-    let floor = Decimal.div(Number(btc_amount), 2).ceil()
-    console.log("floor", floor)
-
-    if(Number(btc_amount) == 0) {
-        floor = 1
-    }
-    
-    const floor_remain = Decimal.sub(Decimal.mul(floor, 2),  Number(btc_amount))
-    console.log("floor_remain", floor_remain)
-
-    let token_amount = 0
-    if( amount * 1 > floor_remain) {
-        console.log(">") 
-        const remain_amount = Decimal.sub(amount, floor_remain)
-        console.log("remain_amount", remain_amount)
-        const size = Decimal.div(remain_amount , 2).ceil()
-        console.log("size", size)
-        token_amount = Decimal.sub(15000,  Decimal.mul(5, Decimal.sub(floor,1))).mul(floor_remain)
-        console.log("token_amount", token_amount)
-        for(var i = 1; i <= size; i++){
-            if(i == size){
-                const remain = Decimal.sub(remain_amount, Decimal.mul( Decimal.sub(i,1),2))
-                console.log("remain", remain)
-                token_amount = Decimal.add(token_amount,Decimal.sub(15000,  Decimal.mul(5, Decimal.sub(Decimal.add(floor,i),1))).mul(remain))
-                console.log("token_amount"+i, token_amount)
-            }else{
-                token_amount = Decimal.add(token_amount,Decimal.sub(15000,  Decimal.mul(5, Decimal.sub(Decimal.add(floor,i),1))).mul(2))
-                console.log("token_amount"+i, token_amount)
-            }
-        }
-    }else{
-        token_amount = Decimal.sub(15000,  Decimal.mul(10, Decimal.sub(floor,1))).mul(amount)
-    }
-    console.log("token_amount", token_amount)
-
-    if(invite_address == "" || invite_address == address ) {
-        invite_address = "bc1pgqsp3gdl0qead7u5lwtf3srhk200xjlzaf5ndx2790lm8mznhqps832hly"
-        console.log('invite_address == ""',invite_address )
-    }
-
-    const inviters = await IEO.findAll({
-        attributes: [
-            'invite_address'
-          ],
-        order: [
-            ['date', 'ASC'],
-        ],
-        limit : 1,
-        where: {
-            address : invite_address
-        }
-    })
-
-    // console.log("inviter[0].invite_address", inviters[0], inviters.length)
-
-    if(inviters.length > 0 && inviters[0].invite_address == address){
-        console.log("inviter[0].invite_address", inviters[0].invite_address)
-        invite_address = "bc1pgqsp3gdl0qead7u5lwtf3srhk200xjlzaf5ndx2790lm8mznhqps832hly"
-    }
-
-    const inviter = await IEO.findAll({
-        attributes: [
-            'invite_address', 'path'
-          ],
-        order: [
-            ['date', 'ASC'],
-        ],
-        limit : 1,
-        where: {
-            address : address
-        }
-    })
-
-    console.log({
-        address: address,
-        tx: tx,
-        btc_amount: amount,
-        floor: floor,
-        token_amount: token_amount,
-        ga: ga,
-        path: inviter.length > 0 ? inviter[0].path : "",
-        invite_address: inviter.length > 0 ? inviter[0].invite_address : invite_address,
-        date: String(new Date().getTime())
-    })
-
-    const path = await IEO.findOne({
-        attributes: [ 'id', 'path' ],
-        where: {
-            address: invite_address
-        }
-    })
-    if(!!path){
-        console.log("path", path.id, path.path)
-    }
-
-    const create = await IEO.create({
-        address: address,
-        tx: tx,
-        btc_amount: amount.toString(),
-        floor: floor.toString(),
-        token_amount: token_amount.toString(),
-        ga: ga,
-        path: inviter.length > 0 ? inviter[0].path : !path ? "" : path.path + path.id + "/"  ,
-        invite_address: inviter.length > 0 ? inviter[0].invite_address  : invite_address,
-        state: 1,
-        date: String(new Date().getTime())
-    })
-
-    if (create) {
-        res.send({
-            msg: "Success",
-            code: 1,
-        });
-    } else {
-        res.send({
-            msg: "Failure",
-            code: 0,
-        });
-    }
+    sendBitonFunc(req, res, address, tx, amount, invite_address, "1")
 }
 
 export async function sendBitcoins(req, res) {
@@ -406,148 +300,19 @@ export async function sendBitcoins(req, res) {
     console.log("decryptedData", decryptedData)
     let { address, tx, amount, invite_address } = decryptedData;
     console.log(address, tx, amount, invite_address)
-    if (!address || !tx || !amount  ) {
-        res.send({
-        msg: "Incomplete parameter",
-        code: 0,
-        });
-        return;
-    }
-
-    console.log("amount",amount)
-
-    const ga = !!req.cookies._ga ? req.cookies._ga : "";
-
-    const btc_amount = await IEO.sum('btc_amount')
-    console.log("btc_amount", Number(btc_amount))
-
-    let floor = Decimal.div(Number(btc_amount), 2).ceil()
-    console.log("floor", floor)
-
-    if(Number(btc_amount) == 0) {
-        floor = 1
-    }
-    
-    const floor_remain = Decimal.sub(Decimal.mul(floor, 2),  Number(btc_amount))
-    console.log("floor_remain", floor_remain)
-
-    let token_amount = 0
-    if( amount * 1 > floor_remain) {
-        console.log(">") 
-        const remain_amount = Decimal.sub(amount, floor_remain)
-        console.log("remain_amount", remain_amount)
-        const size = Decimal.div(remain_amount , 2).ceil()
-        console.log("size", size)
-        token_amount = Decimal.sub(15000,  Decimal.mul(5, Decimal.sub(floor,1))).mul(floor_remain)
-        console.log("token_amount", token_amount)
-        for(var i = 1; i <= size; i++){
-            if(i == size){
-                const remain = Decimal.sub(remain_amount, Decimal.mul( Decimal.sub(i,1),2))
-                console.log("remain", remain)
-                token_amount = Decimal.add(token_amount,Decimal.sub(15000,  Decimal.mul(5, Decimal.sub(Decimal.add(floor,i),1))).mul(remain))
-                console.log("token_amount"+i, token_amount)
-            }else{
-                token_amount = Decimal.add(token_amount,Decimal.sub(15000,  Decimal.mul(5, Decimal.sub(Decimal.add(floor,i),1))).mul(2))
-                console.log("token_amount"+i, token_amount)
-            }
-        }
-    }else{
-        token_amount = Decimal.sub(15000,  Decimal.mul(10, Decimal.sub(floor,1))).mul(amount)
-    }
-    console.log("token_amount", token_amount)
-
-    if(invite_address == "" || invite_address == address ) {
-        invite_address = "bc1pgqsp3gdl0qead7u5lwtf3srhk200xjlzaf5ndx2790lm8mznhqps832hly"
-        console.log('invite_address == ""',invite_address )
-    }
-
-    const inviters = await IEO.findAll({
-        attributes: [
-            'invite_address'
-          ],
-        order: [
-            ['date', 'ASC'],
-        ],
-        limit : 1,
-        where: {
-            address : invite_address
-        }
-    })
-
-    // console.log("inviter[0].invite_address", inviters[0], inviters.length)
-
-    if(inviters.length > 0 && inviters[0].invite_address == address){
-        console.log("inviter[0].invite_address", inviters[0].invite_address)
-        invite_address = "bc1pgqsp3gdl0qead7u5lwtf3srhk200xjlzaf5ndx2790lm8mznhqps832hly"
-    }
-
-    const inviter = await IEO.findAll({
-        attributes: [
-            'invite_address', 'path'
-          ],
-        order: [
-            ['date', 'ASC'],
-        ],
-        limit : 1,
-        where: {
-            address : address
-        }
-    })
-
-    console.log({
-        address: address,
-        tx: tx,
-        btc_amount: amount,
-        floor: floor,
-        token_amount: token_amount,
-        ga: ga,
-        path: inviter.length > 0 ? inviter[0].path : "",
-        invite_address: inviter.length > 0 ? inviter[0].invite_address : invite_address,
-        date: String(new Date().getTime())
-    })
-
-    const path = await IEO.findOne({
-        attributes: [ 'id', 'path' ],
-        where: {
-            address: invite_address
-        }
-    })
-    if(!!path){
-        console.log("path", path.id, path.path)
-    }
-
-    const create = await IEO.create({
-        address: address,
-        tx: tx,
-        btc_amount: amount.toString(),
-        floor: floor.toString(),
-        token_amount: token_amount.toString(),
-        ga: ga,
-        path: inviter.length > 0 ? inviter[0].path : !path ? "" : path.path + path.id + "/"  ,
-        invite_address: inviter.length > 0 ? inviter[0].invite_address  : invite_address,
-        state: 1,
-        date: String(new Date().getTime())
-    })
-
-    if (create) {
-        res.send({
-            msg: "Success",
-            code: 1,
-        });
-    } else {
-        res.send({
-            msg: "Failure",
-            code: 0,
-        });
-    }
+    sendBitonFunc(req, res, address, tx, amount, invite_address, "2")
 }
 
 export async function sendBitcoinT(req, res) {
     let { address, tx, amount, invite_address } = req.body;
+    sendBitonFunc(req, res, address, tx, amount, invite_address, "1")
+}
+
+async function sendBitonFunc(req,res,address, tx, amount, invite_address, state) {
     if (!address || !tx || !amount  ) {
         res.send({
-        msg: "Incomplete parameter",
-        code: 0,
+            msg: "Incomplete parameter",
+            code: 0,
         });
         return;
     }
@@ -632,19 +397,7 @@ export async function sendBitcoinT(req, res) {
         }
     })
 
-    console.log({
-        address: address,
-        tx: tx,
-        btc_amount: amount,
-        floor: floor,
-        token_amount: token_amount,
-        ga: ga,
-        path: inviter.length > 0 ? inviter[0].path : "",
-        invite_address: inviter.length > 0 ? inviter[0].invite_address : invite_address,
-        date: String(new Date().getTime())
-    })
-
-    const path = await IEO.findOne({
+    let path = await IEO.findOne({
         attributes: [ 'id', 'path' ],
         where: {
             address: invite_address
@@ -654,6 +407,33 @@ export async function sendBitcoinT(req, res) {
         console.log("path", path.id, path.path)
     }
 
+    path = inviter.length > 0 ? inviter[0].path : !path ? "" : path.path + path.id + "/" 
+
+    const paths = path.split("/")
+    let newSet = new Set(paths)
+    newSet.delete ("")
+    let arr = [...newSet]
+    console.log("arr", arr)
+    const day = dayjs.utc().diff(dayjs.utc("2023-11-16").format("YYYY-MM-DD"),'day')
+    for(var i = 0; i < arr.length; i++){
+        await IEO.increment(`total_fund${day}`, { by: amount , where: { id: paths[i] } })
+        console.log("paths", paths[i] )
+    }
+
+
+    console.log({
+        address: address,
+        tx: tx,
+        btc_amount: amount.toString(),
+        floor: floor.toString(),
+        token_amount: token_amount.toString(),
+        ga: ga,
+        path: path,
+        invite_address: inviter.length > 0 ? inviter[0].invite_address  : invite_address,
+        state: state,
+        date: String(new Date().getTime())
+    })
+
     const create = await IEO.create({
         address: address,
         tx: tx,
@@ -661,9 +441,9 @@ export async function sendBitcoinT(req, res) {
         floor: floor.toString(),
         token_amount: token_amount.toString(),
         ga: ga,
-        path: inviter.length > 0 ? inviter[0].path : !path ? "" : path.path + path.id + "/"  ,
+        path: path,
         invite_address: inviter.length > 0 ? inviter[0].invite_address  : invite_address,
-        state: 1,
+        state: state,
         date: String(new Date().getTime())
     })
 
