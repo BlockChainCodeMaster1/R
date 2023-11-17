@@ -402,7 +402,7 @@ export default function Home({ invite }: Context) {
             </div>
             <div className=" bg-[url('/ieo_border.png')] bg-no-repeat bg-[length:100%_100%] px-8 sm:px-6 py-8 mt-4">
               <p className="font-[digitalists] flex justify-between text-base ">
-                <span>Number of invitations invested</span>
+                <span>Direct Invitation Investment Amount</span>
                 <span>{myData.inviter_btc_amount} BTC</span>
               </p>
               <p className="font-[digitalists] flex justify-between pt-4 sm:pt-10 text-base">

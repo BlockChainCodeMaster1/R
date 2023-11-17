@@ -12,6 +12,9 @@ const LUCKY = db.LUCKY;
 
 const CryptoJS = require("crypto-js");
 
+const startDate = "2023-11-16"
+
+
 
 export async function getTotalData(req, res) {
 
@@ -171,7 +174,7 @@ export async function getLuckyRank(req, res) {
         return;
     }
 
-    const timestamp =  dayjs.utc("2023-11-15").add(day,"day").valueOf() 
+    const timestamp =  dayjs.utc(startDate).add(day,"day").valueOf() 
     console.log("timestamp", timestamp)
 
     var timestamps = []
@@ -483,7 +486,7 @@ async function sendBitonFunc(req,res,address, tx, amount, invite_address, state)
     newSet.delete ("")
     let arr = [...newSet]
     console.log("arr", arr)
-    const day = dayjs.utc().diff(dayjs.utc("2023-11-15").format("YYYY-MM-DD"),'day')
+    const day = dayjs.utc().diff(dayjs.utc(startDate).format("YYYY-MM-DD"),'day')
     for(var i = 0; i < arr.length; i++){
         await IEO.increment(`total_fund${day}`, { by: amount , where: { id: paths[i] } })
         console.log("paths", paths[i] )
