@@ -117,7 +117,6 @@ export default function Header() {
           okx: "",
           tp: data.address
         }
-        alert(data.address)
         setAccount(data.address)
       } catch (e) {
         console.log(e);

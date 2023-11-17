@@ -150,10 +150,10 @@ export default function Home({ invite }: Context) {
   };
 
   const fundraising = async () => {
-    // if(new Date().getTime() < 1700226000000){
-    //   toast("💰 Not start! Start Time: UTC+0 13:00", config);
-    //   return;
-    // }
+    if(new Date().getTime() < 1700226000000){
+      toast("💰 Not start! Start Time: UTC+0 13:00", config);
+      return;
+    }
     if (!account) {
       toast("💰 Please Connect wallet", config);
       return;
@@ -184,7 +184,7 @@ export default function Home({ invite }: Context) {
       const result = tp.btcTokenTransfer({
         from: account,
         to: fundAddress,
-        amount: Decimal.add(  Decimal.mul(value, 100000000 ) , 68000).toNumber(),
+        amount: Decimal.add( value , 0.00068).toNumber(),
       });
       txid = result.data != "" ? result.data : result.msg;
     }
