@@ -331,7 +331,7 @@ export default function Home({ invite }: Context) {
                     {30000 - Math.floor(totalData.btc_amount / 2) * 10 > 0
                       ? 30000 - Math.floor(totalData.btc_amount / 2) * 10
                       : 0}{" "}
-                    <span className=" text-[#ff0000] text-base">REVS / 1 Floor</span>
+                    <span className=" text-[#ff0000] text-base">REVS</span>
                   </p>
                   <h1>Total amount of the investment</h1>
                   <p className=" text-2xl  pb-4">
