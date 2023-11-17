@@ -21,13 +21,13 @@ export default function Home() {
               <i className=" w-60 h-8 bg-[url('/slogan_tips.png')] bg-no-repeat bg-right-top bg-[length:100%_auto] absolute sm:-right-24 right-0 -top-8"></i>
               REVS is an abbreviation for &apos;Revolution&apos; and &apos;Satoshis,&apos; It utilizes &apos;sats,&apos; the smallest unit of Bitcoin as entropy factors, REVS introduces a resonance mechanism to catalyze entropic fusion. This innovative approach combats the escalating disarray within the Bitcoin ecosystem, striving for a more ordered and stable digital currency environment.
             </p>
-            {/* <p className=" text-center py-4">
+            <p className=" text-center py-4">
               <Link href="/launch">
                 <button className="cursor-pointer bg-[#FF0000]  my-4 px-14 py-3 text-xs sm:text-base hover:drop-shadow-[0_5px_5px_rgba(255,0,0,0.75)]">
                   Launch
                 </button>
               </Link>
-            </p> */}
+            </p>
           </div>
           <div className="bg-[url('/slogan_cover.png')] bg-no-repeat absolute top-0 left-0 right-0 bottom-0 bg-top bg-[length:80%_auto] -z-10 animate-pulse"></div>
           <div className="bg-[url('/video_cover.png')] bg-no-repeat absolute h-10 left-0 right-0 bottom-0 bg-top bg-[length:80%_auto] -z-10"></div>
