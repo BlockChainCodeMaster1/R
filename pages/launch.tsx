@@ -327,11 +327,11 @@ export default function Home({ invite }: Context) {
                 <li className="font-[digitalists] w-12/12 sm:w-6/12">
                   <h1>Token exchange ratio</h1>
                   <p className=" text-2xl pb-4">
-                    1 <span className=" text-[#ff7700] text-base">₿</span> ={" "}
-                    {15000 - Math.floor(totalData.btc_amount / 2) * 10 > 0
-                      ? 15000 - Math.floor(totalData.btc_amount / 2) * 10
+                    2 <span className=" text-[#ff7700] text-base">₿</span> ={" "}
+                    {30000 - Math.floor(totalData.btc_amount / 2) * 10 > 0
+                      ? 30000 - Math.floor(totalData.btc_amount / 2) * 10
                       : 0}{" "}
-                    <span className=" text-[#ff0000] text-base">REVS</span>
+                    <span className=" text-[#ff0000] text-base">REVS / 1 Floor</span>
                   </p>
                   <h1>Total amount of the investment</h1>
                   <p className=" text-2xl  pb-4">

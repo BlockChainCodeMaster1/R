@@ -3,7 +3,7 @@
         "port": 8000
     },
     "mysql": {
-        "host": "127.0.0.1",
+        "host": "54.254.20.173",
         "port": 3306,
         "username": "root",
         "password": "acoki123456",
