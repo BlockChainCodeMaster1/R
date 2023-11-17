@@ -408,15 +408,15 @@ export default function Home({ invite }: Context) {
               </p>
             </div>
             <div className=" bg-[url('/ieo_border.png')] bg-no-repeat bg-[length:100%_100%] px-8 sm:px-6 py-8 mt-4">
-              <p className="font-[digitalists] flex justify-between text-base ">
+              <p className="font-[digitalists] flex justify-between text-xs ">
                 <span>Direct Invitation Investment Amount</span>
                 <span>{myData.inviter_btc_amount} BTC</span>
               </p>
-              <p className="font-[digitalists] flex justify-between pt-4 sm:pt-10 text-base">
+              <p className="font-[digitalists] flex justify-between pt-4 sm:pt-10 text-xs">
                 <span>My dividends</span>
                 <span>{myData.inviter_token_amount} REVS</span>
               </p>
-              <p className="font-[digitalists] flex justify-between text-base  pt-4 sm:pt-10 ">
+              <p className="font-[digitalists] flex justify-between text-xs  pt-4 sm:pt-10 ">
                 <span>Number of people I invited</span>
                 <span>{myData.invite_count}</span>
               </p>
@@ -496,7 +496,7 @@ export default function Home({ invite }: Context) {
                 Top 12 Lucky Ranking
               </button>
             </div>
-            <div className=" bg-[url('/rank_border.png')] bg-no-repeat bg-[length:100%_100%]  px-8 sm:px-6 py-1 min-w-fit sm:min-h-[53.5rem]">
+            <div className=" bg-[url('/rank_border.png')] bg-no-repeat bg-[length:100%_100%]  px-8 sm:px-6 py-1 pt-4 min-w-fit sm:min-h-[53.5rem]">
               {tabIndex == 0 && (
                 <>
                   <p className="font-[digitalists] flex justify-between pt-0 sm:pt-6 text-base">
@@ -586,7 +586,7 @@ export default function Home({ invite }: Context) {
                         </li>
                       ))
                     ) : (
-                      <li className=" my-4 bg-[url('/no_data.png')] bg-no-repeat bg-[length:100%_100%] sm:min-h-[48.5rem]"></li>
+                      <li className=" my-4 bg-[url('/no_data.png')] bg-no-repeat bg-[length:100%_100%] min-h-[25rem] sm:min-h-[48.5rem]"></li>
                     )}
                   </ul>
                 </>
