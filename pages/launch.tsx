@@ -150,10 +150,10 @@ export default function Home({ invite }: Context) {
   };
 
   const fundraising = async () => {
-    if(new Date().getTime() < 1700226000000){
-      toast("💰 Not start! Start Time: UTC+0 13:00", config);
-      return;
-    }
+    // if(new Date().getTime() < 1700226000000){
+    //   toast("💰 Not start! Start Time: UTC+0 13:00", config);
+    //   return;
+    // }
     if (!account) {
       toast("💰 Please Connect wallet", config);
       return;
