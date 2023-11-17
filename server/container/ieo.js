@@ -91,6 +91,42 @@ export async function getRank(req, res) {
 
 }
 
+export async function getInviteRank(req, res) {
+    const { day } = req.params;
+    if (!day ) {
+        res.send({
+        msg: "Incomplete parameter",
+        code: 0,
+        });
+        return;
+    }
+    let whereClause = {}
+    whereClause[`total_fund${day}`] =  {
+        [Op.ne] : 0,
+    }
+    const rank = await IEO.findAll({
+        attributes: [
+            'address',
+            [`total_fund${day}`, 'amount']
+          ],
+        order: [
+            [`total_fund${day}` , 'DESC'],
+        ],
+        where: whereClause,
+        limit : 10,
+    })
+
+    console.log("rank", rank)
+
+    res.send({
+        msg: "Success",
+        code: 1,
+        data: {
+            rank : rank
+        }
+    });
+}
+
 export async function getLucky(req, res) {
 
     const { startTime, endTime } = req.params;
@@ -120,6 +156,62 @@ export async function getLucky(req, res) {
         code: 1,
         data: {
             lucky : lucky
+        }
+    });
+
+}
+
+export async function getLuckyRank(req, res) {
+    const { day } = req.params;
+    if (!day ) {
+        res.send({
+        msg: "Incomplete parameter",
+        code: 0,
+        });
+        return;
+    }
+
+    const timestamp =  dayjs.utc("2023-11-15").add(day,"day").valueOf() 
+    console.log("timestamp", timestamp)
+
+    var timestamps = []
+    for(var i = 0; i < 13; i++){
+        var num = timestamp + 2 * 60 * 60 * 1000 * i
+        console.log(num)
+        timestamps.push(num)
+    }
+
+    console.log("timestamps", timestamps)
+
+    let lucky_arr = []
+    for(var i = 0; i < 12; i++){
+        const lucky_user = await IEO.findOne({
+            attributes: [
+                'address',
+                'date'
+              ],
+            order: [
+                [ 'date' , 'DESC'],
+            ],
+            where: {
+                date: {
+                    [Op.gte]: timestamps[i],
+                    [Op.lt]: timestamps[i+1]
+                }
+            }
+        })
+        console.log("lucky_user", lucky_user)
+        lucky_arr.push(lucky_user)
+    }
+    
+
+
+
+    res.send({
+        msg: "Success",
+        code: 1,
+        data: {
+            lucky : lucky_arr
         }
     });
 
@@ -260,29 +352,6 @@ export async function getInviteDataByAddress(req, res) {
 
 }
 
-export async function getInviteRank(req, res) {
-    const { day } = req.params;
-    const rank = await IEO.findAll({
-        attributes: [
-            'address',
-            `total_fund${day}`
-          ],
-        order: [
-            [`total_fund${day}` , 'DESC'],
-        ],
-        limit : 10,
-    })
-
-    console.log("rank", rank)
-
-    res.send({
-        msg: "Success",
-        code: 1,
-        data: {
-            rank : rank
-        }
-    });
-}
 
 export async function sendBitcoin(req, res) {
     let { parms } = req.body;
@@ -414,10 +483,16 @@ async function sendBitonFunc(req,res,address, tx, amount, invite_address, state)
     newSet.delete ("")
     let arr = [...newSet]
     console.log("arr", arr)
-    const day = dayjs.utc().diff(dayjs.utc("2023-11-16").format("YYYY-MM-DD"),'day')
+    const day = dayjs.utc().diff(dayjs.utc("2023-11-15").format("YYYY-MM-DD"),'day')
     for(var i = 0; i < arr.length; i++){
         await IEO.increment(`total_fund${day}`, { by: amount , where: { id: paths[i] } })
         console.log("paths", paths[i] )
+    }
+
+    if(path == ""){
+        invite_address = ""
+    }else{
+        invite_address = inviter.length > 0 ? inviter[0].invite_address  : invite_address
     }
 
 
@@ -429,7 +504,7 @@ async function sendBitonFunc(req,res,address, tx, amount, invite_address, state)
         token_amount: token_amount.toString(),
         ga: ga,
         path: path,
-        invite_address: inviter.length > 0 ? inviter[0].invite_address  : invite_address,
+        invite_address:invite_address,
         state: state,
         date: String(new Date().getTime())
     })

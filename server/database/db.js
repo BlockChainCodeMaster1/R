@@ -13,11 +13,12 @@ const dbHost = configs.mysql.host,
 const db = {
   sequelize: new Sequelize(dbName, dbUsername, dbPassword, {
     host: dbHost,
-    dialect: "mysql",
+    dialect: "mariadb",
     port: dbPort,
     operatorsAliases: false,
     dialectOptions: {
       connectTimeout: 30000, // 设置连接超时时间为 30 秒
+      socketTimeout: 60000
     },
     pool: {
       max: 30,

@@ -20,9 +20,27 @@ export const getRank = async (startTime: Number, endTime: Number) => {
   }
 };
 
+export const getInviteRank = async (day: Number) => {
+  try {
+    const { data } = await axios.get(`/api/getInviteRank/${day}`);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getLucky = async (startTime: Number, endTime: Number) => {
   try {
     const { data } = await axios.get(`/api/getLucky/${startTime}/${endTime}`);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getLuckyRank = async (day: Number) => {
+  try {
+    const { data } = await axios.get(`/api/getLuckyRank/${day}`);
     return data;
   } catch (error) {
     console.log(error);

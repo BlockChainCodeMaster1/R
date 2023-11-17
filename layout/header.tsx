@@ -26,7 +26,7 @@ export default function Header() {
     },
     {
       name: "Launch",
-      href: "/",
+      href: "/launch",
     }
   ]);
 
