@@ -443,21 +443,21 @@ async function sendBitonFunc(req,res,address, tx, amount, invite_address, state)
         console.log("remain_amount", remain_amount)
         const size = Decimal.div(remain_amount , 2).ceil()
         console.log("size", size)
-        token_amount = Decimal.sub(15000,  Decimal.mul(5, Decimal.sub(floor,1))).mul(floor_remain)
+        token_amount = Decimal.sub(30000,  Decimal.mul(5, Decimal.sub(floor,1))).mul(floor_remain)
         console.log("token_amount", token_amount)
         for(var i = 1; i <= size; i++){
             if(i == size){
                 const remain = Decimal.sub(remain_amount, Decimal.mul( Decimal.sub(i,1),2))
                 console.log("remain", remain)
-                token_amount = Decimal.add(token_amount,Decimal.sub(15000,  Decimal.mul(5, Decimal.sub(Decimal.add(floor,i),1))).mul(remain))
+                token_amount = Decimal.add(token_amount,Decimal.sub(30000,  Decimal.mul(5, Decimal.sub(Decimal.add(floor,i),1))).mul(remain))
                 console.log("token_amount"+i, token_amount)
             }else{
-                token_amount = Decimal.add(token_amount,Decimal.sub(15000,  Decimal.mul(5, Decimal.sub(Decimal.add(floor,i),1))).mul(2))
+                token_amount = Decimal.add(token_amount,Decimal.sub(30000,  Decimal.mul(5, Decimal.sub(Decimal.add(floor,i),1))).mul(2))
                 console.log("token_amount"+i, token_amount)
             }
         }
     }else{
-        token_amount = Decimal.sub(15000,  Decimal.mul(10, Decimal.sub(floor,1))).mul(amount)
+        token_amount = Decimal.sub(30000,  Decimal.mul(10, Decimal.sub(floor,1))).mul(amount)
     }
     console.log("token_amount", token_amount)
 
