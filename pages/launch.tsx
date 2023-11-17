@@ -229,7 +229,7 @@ export default function Home({ invite }: Context) {
               >
                 <span className="text-base">
                   <h1>{formatAddress(el["address"])}</h1>
-                  <p>{dayjs(el["date"] * 1).format("MM/DD/YYYY HH:MM")}</p>
+                  <p>{dayjs(el["date"]).format("MM/DD/YYYY HH:mm")}</p>
                 </span>
                 <span className=" text-xl sm:text-xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500  tracking-normal text-right">
                   <p>
@@ -247,7 +247,7 @@ export default function Home({ invite }: Context) {
       {showMyInviteDataList && (
         <div className=" fixed border border-[#ff0000] z-30 w-4/12 p-4 bg-black bg-opacity-90 left-1/2 top-1/2 -ml-60 -mt-48 min-h-[20rem] overflow-auto">
           <h1 className=" text-center text-[#ff0000] flex justify-between pb-4">
-            <span>View your own data</span>
+            <span>View your invite data</span>
             <span
               className=" cursor-pointer"
               onClick={() => setShowInviteMyDataList(false)}
@@ -263,7 +263,7 @@ export default function Home({ invite }: Context) {
               >
                 <span className="text-base">
                   <h1>{formatAddress(el["address"])}</h1>
-                  <p>{dayjs(el["date"] * 1).format("MM/DD/YYYY HH:MM")}</p>
+                  <p>{dayjs(el["date"]).format("MM/DD/YYYY HH:mm")}</p>
                 </span>
                 <span className=" text-xl sm:text-xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500  tracking-normal  text-right">
                   <p>
@@ -380,12 +380,12 @@ export default function Home({ invite }: Context) {
                   onChange={(e) => inputChange(e)}
                   className="border border-[#FF0000] bg-transparent w-full my-4 text-base outline-none p-4"
                 />
-                <button
+                {/* <button
                   onClick={() => setValue(balance / 100000000)}
                   className=" absolute bg-[#ff0000] cursor-pointer right-2 top-7 sm:top-6 px-6 py-2 text-xs sm:text-base"
                 >
                   MAX
-                </button>
+                </button> */}
               </p>
               <p className="font-[digitalists] flex justify-between text-xs sm:text-base">
                 <span>Balance</span>
@@ -475,7 +475,7 @@ export default function Home({ invite }: Context) {
                     : "text-[#ff0000] border border-[#ff0000]"
                 }`}
               >
-                Top 10 Lucky Ranking
+                Top 12 Lucky Ranking
               </button>
             </div>
             <div className=" bg-[url('/rank_border.png')] bg-no-repeat bg-[length:100%_100%]  px-8 sm:px-6 py-1 min-w-fit sm:min-h-[53.5rem]">
