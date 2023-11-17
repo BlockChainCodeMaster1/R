@@ -326,6 +326,7 @@ export default function Home({ invite }: Context) {
               <ul className=" sm:text-left flex gap-8 sm:flex-row flex-col  text-center">
                 <li className="font-[digitalists] w-12/12 sm:w-6/12">
                   <h1>Token exchange ratio</h1>
+                  <h1>Every Floor include 2 <span className=" text-[#ff7700] text-base">₿</span></h1>
                   <p className=" text-2xl pb-4">
                     1 <span className=" text-[#ff7700] text-base">₿</span> ={" "}
                     {30000 - Math.floor(totalData.btc_amount / 2) * 10 > 0

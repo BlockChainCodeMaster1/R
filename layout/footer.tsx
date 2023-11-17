@@ -11,7 +11,7 @@ export default function Footer() {
         <div className=" border-t border-[#ff0000] mt-4 sm:mt-10 p-4">
           <div className="w-12/12 sm:w-8/12 m-auto  flex justify-between">
             <img src="/logo.png" className="w-4  object-fill sm:w-8" />
-            <span className=" sm:text-base text-xs  text-[#ff0000]">© 2023 SEVS</span>
+            <span className=" sm:text-base text-xs  text-[#ff0000]">© 2023 REVS</span>
           </div>
         </div>
     </footer>
