@@ -173,15 +173,15 @@ export default function Header() {
             <ul className=" bg-[url('/ieo_border.png')] bg-no-repeat bg-[length:100%_100%]  sm:-ml-48 -mt-32 px-10 py-14 w-9/12 sm:w-3/12 flex gap-10 relative mx-auto sm:absolute sm:left-1/2 left-0 top-1/2 justify-center">
               <li className=" cursor-pointer" onClick={() => connectUnisatWallet()}>
                 <img src="/unisat.png" className=" w-12 m-auto" />
-                <p className=" py-4 text-xs">UniSat Wallet</p>
+                <p className=" py-4 text-xs text-center">UniSat</p>
               </li>
               <li className=" cursor-pointer" onClick={() => connectOKXWallet() }>
                 <img src="/okx.png" className=" w-12 m-auto"  />
-                <p className=" py-4 text-xs">OKX Wallet</p>
+                <p className=" py-4 text-xs text-center">OKX</p>
               </li>
               <li className=" cursor-pointer" onClick={() => connectTPWallet() }>
                 <img src="/tp.png" className=" w-12 m-auto"  />
-                <p className=" py-4 text-xs">TP Wallet</p>
+                <p className=" py-4 text-xs text-center">TP</p>
               </li>
             </ul> 
         </div>

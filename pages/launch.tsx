@@ -1,9 +1,6 @@
 import HeaderFooter from "../layout/HeaderFooter";
 import { useState, useEffect, useRef } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, EffectCards, Thumbs, EffectCreative } from "swiper/modules";
 import "swiper/css";
-import Link from "next/link";
 import {
   getTotalData,
   getDataByAddress,
@@ -17,7 +14,6 @@ import {
 } from "../api";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { toast } from "react-toastify";
-import { useRouter } from "next/router";
 import Decimal from "decimal.js";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -80,8 +76,6 @@ export default function Home({ invite }: Context) {
   const [rankDay, setRankDay] = useState(day);
   const [luckyDay, setLuckyDay] = useState(day);
 
-  const router = useRouter();
-
   const formatAddress = (address: string) => {
     return (
       address.substr(0, 8) + "......" + address.substr(address.length - 8, 8)
@@ -96,7 +90,8 @@ export default function Home({ invite }: Context) {
     const data = await Promise.all(promiseArr);
     setRankData(data[0].data.rank);
     setLucyData(data[1].data.lucky);
-    setInviteAddress(invite);
+    console.log("invite",invite)
+    setInviteAddress(!!invite?invite:"");
   };
 
   useEffect(() => {
@@ -104,13 +99,9 @@ export default function Home({ invite }: Context) {
     const interval = setInterval(async () => {
       let promiseArr = [getTotalData()];
       const data = await Promise.all(promiseArr);
-      console.log("promiseArr", data, data[0].data);
-      // const { data: totalData } = ;
+      console.log("getTotalData", data, data[0].data);
       setTotalData(data[0].data);
-      // console.log("totalData", totalData);
-      // const { data: rankDatas } = ;
-      // console.log("rankDatas", 
-      // console.log("rankData", rankDatas);
+      
       !!(window as any).account &&
         setAccount(
           (window as any).account.unisat != ""
@@ -119,24 +110,16 @@ export default function Home({ invite }: Context) {
             ? (window as any).account.okx
             : (window as any).account.tp
         );
-      // let unisatBalance = await (window as any).unisat.getBalance();
-      // console.log("unisatBalance", unisatBalance)
-      //   let unisatBalance = await (window as any).unisat.getBalance();
       if (!!account) {
         let promiseArr = [getDataByAddress(account), getBalance(account)];
         const data = await Promise.all(promiseArr);
-        console.log("promiseArr", data);
-        // const { data: myData } = await getDataByAddress(account);
-        // console.log("getDataByAddress", myData)
         setMyData(data[0].data);
-        // let btcBalance = await getBalance(account)
-        // console.log("btcBalance", btcBalance.chain_stats.funded_txo_sum - btcBalance.chain_stats.spent_txo_sum)
         // setBalance(data[1].chain_stats.funded_txo_sum - data[1].chain_stats.spent_txo_sum)
         setBalance(100);
       }
     }, 3000);
     return () => clearInterval(interval);
-  }, [ account, dayjs]);
+  }, [ account]);
 
   const getMyDataList = async () => {
     if (!!account) {
@@ -163,13 +146,15 @@ export default function Home({ invite }: Context) {
   };
 
   const fundraising = async () => {
+    // if(new Date().getTime() < 1700226000000){
+    //   toast("💰 Not start!", config);
+    //   return;
+    // }
     if (!account) {
       toast("💰 Please Connect wallet", config);
       return;
     }
-    // const {halfHourFee} = await getFeerate();
-    const halfHourFee = 1;
-    console.log("getFeerate", halfHourFee);
+    const { halfHourFee } = await getFeerate();
     let txid = "";
     console.log("account", (window as any).account);
     if ((window as any).account.unisat != "") {
@@ -208,6 +193,9 @@ export default function Home({ invite }: Context) {
       const { data: rankDatas } = await getInviteRank(rankDay);
       console.log("rankData", rankDatas);
       setRankData(rankDatas.rank);
+      const { data: luckyDatas } = await getLuckyRank(day);
+      console.log("luckyDatas", luckyDatas);
+      setLucyData(luckyDatas.lucky);
       setValue(0);
     }
   };
@@ -302,16 +290,6 @@ export default function Home({ invite }: Context) {
           <source src="/ieo_background.mp4" type="video/mp4" />
         </video>
         <div className="w-10/12 mx-auto pt-32">
-          {/* <button onClick={()=>{
-            tp.getWallet({walletTypes: [ 'btc'], switch: true}).then(console.log)
-            tp.btcTokenTransfer({
-              from: '3HrQ4QGSWc7bvxZREVCwR4gcWS2YuBCyGc',
-              to: '3HrQ4QGSWc7bvxZREVCwR4gcWS2YuBCyGc',
-              amount: '0.000000001',
-          }).then(res => {
-            console.warn(res)
-          })
-          }} >sendBitCoin</button> */}
           <h1 className="font-[digitalists] text-xl sm:text-2xl text-[#ff0000]">
             A System to Combat Bitcoin Ecological Entropy Increase
           </h1>
@@ -393,9 +371,6 @@ export default function Home({ invite }: Context) {
                       </div>
                     </div>
                   </div>
-
-                  {/* <div className=" absolute top-0 border-solid border-t-[#ff0000] border-t-[12rem] border-x-transparent border-x-[4rem] border-b-0"></div>
-                  <div className=" absolute top-0 border-solid border-t-[#ffffff] border-t-[12rem] border-x-transparent border-x-[4rem] border-b-0"></div> */}
                 </li>
               </ul>
               <p className=" relative">
@@ -426,10 +401,6 @@ export default function Home({ invite }: Context) {
               </p>
             </div>
             <div className=" bg-[url('/ieo_border.png')] bg-no-repeat bg-[length:100%_100%] px-8 sm:px-6 py-8 mt-4">
-              {/* <p className="font-[digitalists] flex justify-between text-base ">
-                <span>My inviter</span>
-                <span>{formatAddress(inviteAddress)}</span>
-              </p> */}
               <p className="font-[digitalists] flex justify-between text-base ">
                 <span>Number of invitations invested</span>
                 <span>{myData.inviter_btc_amount} BTC</span>
