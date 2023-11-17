@@ -220,6 +220,37 @@ export async function getLuckyRank(req, res) {
 
 }
 
+export async function getLuckyRankReward(req, res){
+    const { day } = req.params;
+    if (!day ) {
+        res.send({
+        msg: "Incomplete parameter",
+        code: 0,
+        });
+        return;
+    }
+    const startTime =  dayjs.utc(startDate).add(day,"day").valueOf() 
+    const endTime =  dayjs.utc(startDate).add(day*1 +1,"day").valueOf() 
+    console.log(startTime, endTime)
+    const luckyReward = await IEO.sum('btc_amount',{
+        where: {
+            date:{
+                [Op.gte]:  startTime,
+                [Op.lt]: endTime
+            }
+        }
+    })
+    console.log("getLuckyRankReward", luckyReward)
+
+    res.send({
+        msg: "Success",
+        code: 1,
+        data: {
+            luckyReward : Decimal.div(Number(luckyReward), 600)
+        }
+    });
+}
+
 export async function getDataByAddress(req, res) {
     const { address } = req.params;
 
@@ -354,7 +385,6 @@ export async function getInviteDataByAddress(req, res) {
     }
 
 }
-
 
 export async function sendBitcoin(req, res) {
     let { parms } = req.body;
@@ -537,3 +567,4 @@ async function sendBitonFunc(req,res,address, tx, amount, invite_address, state)
         });
     }
 }
+

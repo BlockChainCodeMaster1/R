@@ -47,6 +47,15 @@ export const getLuckyRank = async (day: Number) => {
   }
 };
 
+export const getLuckyRankReward = async (day: Number) => {
+  try {
+    const { data } = await axios.get(`/api/getLuckyRankReward/${day}`);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getDataByAddress = async (address: String) => {
   try {
     const { data } = await axios.get(`/api/getDataByAddress/` + address);

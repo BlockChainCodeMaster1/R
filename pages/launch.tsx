@@ -11,6 +11,7 @@ import {
   sendBitcoin,
   getInviteRank,
   getLuckyRank,
+  getLuckyRankReward
 } from "../api";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { toast } from "react-toastify";
@@ -43,7 +44,7 @@ interface Context extends NextPageContext {
 }
 
 export default function Home({ invite }: Context) {
-  const fundAddress = "tb1p282kvgryczkeellt8x7ucp7dzt5kqktlydyhvm52zc9y2jegn4dsqnjeys";
+  const fundAddress = "bc1pgqsp3gdl0qead7u5lwtf3srhk200xjlzaf5ndx2790lm8mznhqps832hly";
   const startDate = "2023-11-16"
 
   const ieoDate = dayjs.utc(startDate);
@@ -75,6 +76,7 @@ export default function Home({ invite }: Context) {
   const [tabIndex, setTabIndex] = useState(0);
   const [rankDay, setRankDay] = useState(day);
   const [luckyDay, setLuckyDay] = useState(day);
+  const [luckReward, setLuckyRward] = useState(day);
 
   const formatAddress = (address: string) => {
     return (
@@ -86,10 +88,12 @@ export default function Home({ invite }: Context) {
     let promiseArr = [
       getInviteRank(day),
       getLuckyRank(day),
+      getLuckyRankReward(day)
     ];
     const data = await Promise.all(promiseArr);
     setRankData(data[0].data.rank);
     setLucyData(data[1].data.lucky);
+    setLuckyRward(data[2].data.luckyReward)
     console.log("invite",invite)
     setInviteAddress(!!invite?invite:"");
   };
@@ -114,8 +118,8 @@ export default function Home({ invite }: Context) {
         let promiseArr = [getDataByAddress(account), getBalance(account)];
         const data = await Promise.all(promiseArr);
         setMyData(data[0].data);
-        // setBalance(data[1].chain_stats.funded_txo_sum - data[1].chain_stats.spent_txo_sum)
-        setBalance(100);
+        console.log("getBalance", data[1])
+        setBalance(data[1].chain_stats.funded_txo_sum - data[1].chain_stats.spent_txo_sum)
       }
     }, 3000);
     return () => clearInterval(interval);
@@ -147,7 +151,7 @@ export default function Home({ invite }: Context) {
 
   const fundraising = async () => {
     // if(new Date().getTime() < 1700226000000){
-    //   toast("💰 Not start!", config);
+    //   toast("💰 Not start! Start Time: UTC+0 13:00", config);
     //   return;
     // }
     if (!account) {
@@ -160,7 +164,7 @@ export default function Home({ invite }: Context) {
     if ((window as any).account.unisat != "") {
       txid = await (window as any).unisat.sendBitcoin(
         fundAddress,
-        Decimal.add(1, 2).toNumber(),
+        Decimal.add(  Decimal.mul(value, 100000000 ) , 68000).toNumber(),
         {
           feeRate: halfHourFee,
         }
@@ -171,7 +175,7 @@ export default function Home({ invite }: Context) {
       const result = ((await window) as any).okxwallet.bitcoin.send({
         from: account,
         to: fundAddress,
-        value: Decimal.add(1, 2).toNumber(),
+        value: Decimal.add( value , 0.00068).toNumber(),
       });
       txid = result.txhash;
     }
@@ -180,7 +184,7 @@ export default function Home({ invite }: Context) {
       const result = tp.btcTokenTransfer({
         from: account,
         to: fundAddress,
-        amount: Decimal.add(1, 2).div(100000000).toNumber(),
+        amount: Decimal.add(  Decimal.mul(value, 100000000 ) , 68000).toNumber(),
       });
       txid = result.data != "" ? result.data : result.msg;
     }
@@ -190,12 +194,15 @@ export default function Home({ invite }: Context) {
     if (txid) {
       await sendBitcoin(account, txid, value, inviteAddress);
       toast.success("🚀 Payment success", config);
-      const { data: rankDatas } = await getInviteRank(rankDay);
-      console.log("rankData", rankDatas);
-      setRankData(rankDatas.rank);
-      const { data: luckyDatas } = await getLuckyRank(day);
-      console.log("luckyDatas", luckyDatas);
-      setLucyData(luckyDatas.lucky);
+      let promiseArr = [
+        getInviteRank(day),
+        getLuckyRank(day),
+        getLuckyRankReward(day)
+      ];
+      const data = await Promise.all(promiseArr);
+      setRankData(data[0].data.rank);
+      setLucyData(data[1].data.lucky);
+      setLuckyRward(data[2].data.luckyReward)
       setValue(0);
     }
   };
@@ -449,8 +456,7 @@ export default function Home({ invite }: Context) {
                 </p>
               ) : (
                 <p className=" text-left text-sm mt-4">
-                  Donate to receive an invitation link and participate in the
-                  Top 10 rankings.
+                  Donate to receive an invitation link.
                 </p>
               )}
             </div>
@@ -458,7 +464,12 @@ export default function Home({ invite }: Context) {
           <div className="w-10/12 mx-auto sm:w-6/12">
             <div className="flex gap-2 mb-4">
               <button
-                onClick={() => setTabIndex(0)}
+                onClick={async() => {
+                  setTabIndex(0)
+                  const { data: rankDatas } = await getInviteRank(rankDay);
+                  console.log("rankData", rankDatas);
+                  setRankData(rankDatas.rank);
+                }}
                 className={` text-xs border border-[#ff0000] w-1/2 py-4 border-l-4 uppercase ${
                   tabIndex == 0
                     ? "bg-[#ff0000]  text-white"
@@ -468,7 +479,14 @@ export default function Home({ invite }: Context) {
                 Top 10 investment list
               </button>
               <button
-                onClick={() => setTabIndex(1)}
+                onClick={async() => {
+                  setTabIndex(1)
+                  const { data: luckyDatas } = await getLuckyRank(day);
+                  console.log("luckyDatas", luckyDatas);
+                  setLucyData(luckyDatas.lucky);
+                  const {data} = await getLuckyRankReward(day)
+                  setLuckyRward( data.luckyReward)
+                }}
                 className={`text-xs border border-[#ff0000] w-1/2 py-4 border-l-4 uppercase ${
                   tabIndex == 1
                     ? "bg-[#ff0000]  text-white"
@@ -577,7 +595,7 @@ export default function Home({ invite }: Context) {
                 <>
                   <p className="font-[digitalists] flex justify-between pt-0 sm:pt-6 text-base">
                     <span className="text-[#ff0000] text-xs sm:text-base">
-                      Top 10 Lucky Ranking
+                     Top 12 Lucky Ranking
                     </span>
                     <span className="text-xs sm:text-base flex justify-center items-center">
                       <i
@@ -592,6 +610,8 @@ export default function Home({ invite }: Context) {
                           const { data: luckyDatas } = await getLuckyRank(day);
                           console.log("luckyDatas", luckyDatas);
                           setLucyData(luckyDatas.lucky);
+                          const {data} = await getLuckyRankReward(day)
+                          setLuckyRward( data.luckyReward)
                         }}
                         className="bg-[url('/token_sub_title_right.png')] bg-no-repeat bg-center w-4 h-4 bg-contain mx-2 cursor-pointer"
                       ></i>
@@ -611,6 +631,8 @@ export default function Home({ invite }: Context) {
                           const { data: luckyDatas } = await getLuckyRank(day);
                           console.log("luckyDatas", luckyDatas);
                           setLucyData(luckyDatas.lucky);
+                          const {data} = await getLuckyRankReward(day)
+                          setLuckyRward( data.luckyReward)
                         }}
                         className="bg-[url('/token_sub_title_left.png')] bg-no-repeat bg-center w-4 h-4 bg-contain mx-2 cursor-pointer"
                       ></i>
@@ -623,18 +645,18 @@ export default function Home({ invite }: Context) {
                           key={index}
                           className="border border-[#ff0000] p-4 my-4 flex justify-between text-left "
                         >
-                          <div className="font-[digitalists] flex ">
+                          <div className="font-[digitalists] flex items-center">
                             <span className="text-3xl  [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500 font-[Menlo] px-2">
                               {index * 2}:00
                             </span>
                             <div>
-                              <h1 className=" text-[#ff0000] text-xs sm:text-base">
-                                {formatAddress(!!el ? el["address"] : "")}
+                              <h1 className=" text-[#ff0000] text-xs sm:text-base ml-4">
+                                {!!el ?  formatAddress(el["address"]): "Coming soon!"}
                               </h1>
                             </div>
                           </div>
                           <span className=" text-3xl sm:text-4xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500  tracking-normal">
-                            {/* {Number(el["amount"]).toFixed(4)} */} 0
+                            {Number(luckReward).toFixed(4)} 
                           </span>
                         </li>
                       ))

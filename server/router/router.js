@@ -6,6 +6,7 @@ export default function router (router, handle) {
     router.get("/api/getInviteRank/:day", require("../container/ieo.js").getInviteRank)
     router.get("/api/getLucky/:startTime/:endTime", require("../container/ieo.js").getLucky)
     router.get("/api/getLuckyRank/:day", require("../container/ieo.js").getLuckyRank)
+    router.get("/api/getLuckyRankReward/:day", require("../container/ieo.js").getLuckyRankReward)
     router.get("/api/getDataByAddress/:address", require("../container/ieo.js").getDataByAddress)
     router.get("/api/getFloorDataByAddress/:address", require("../container/ieo.js").getFloorDataByAddress)
     router.get("/api/getInviteDataByAddress/:address", require("../container/ieo.js").getInviteDataByAddress)
