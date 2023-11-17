@@ -305,7 +305,7 @@ export default function Home({ invite }: Context) {
             </li>
             <li>
               <h1 className="font-[digitalists] text-[#ff0000]  py-2 text-sm sm:text-base">
-                Total fundraising amount
+                Number of Investors
               </h1>
               <p className="text-5xl sm:text-7xl font-[Bayon] [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500 tracking-normal">
                 {totalData.users_conunt}
@@ -483,7 +483,7 @@ export default function Home({ invite }: Context) {
                 <>
                   <p className="font-[digitalists] flex justify-between pt-0 sm:pt-6 text-base">
                     <span className="text-[#ff0000] text-xs sm:text-base">
-                      Top 10 investment list
+                      Top 10 Total Performance Ranking
                     </span>
                     <span className="text-xs sm:text-base flex justify-center items-center">
                       <i
