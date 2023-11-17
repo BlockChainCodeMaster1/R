@@ -194,7 +194,7 @@ export async function getLuckyRank(req, res) {
                 'date'
               ],
             order: [
-                [ 'date' , 'DESC'],
+                [ 'date' , 'ASC'],
             ],
             where: {
                 date: {
