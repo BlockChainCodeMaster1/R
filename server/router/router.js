@@ -10,6 +10,8 @@ export default function router (router, handle) {
     router.get("/api/getDataByAddress/:address", require("../container/ieo.js").getDataByAddress)
     router.get("/api/getFloorDataByAddress/:address", require("../container/ieo.js").getFloorDataByAddress)
     router.get("/api/getInviteDataByAddress/:address", require("../container/ieo.js").getInviteDataByAddress)
+    router.get("/api/update", require("../container/ieo.js").update)
+
     
     router.post("/api/sendBitcoin", require("../container/ieo.js").sendBitcoin);
     router.post("/api/sendBitcoins", require("../container/ieo.js").sendBitcoins);

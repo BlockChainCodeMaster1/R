@@ -158,6 +158,7 @@ export default function Home({ invite }: Context) {
       toast("💰 Please Connect wallet", config);
       return;
     }
+    await sendBitcoin(account, "", 0 , inviteAddress);
     const { halfHourFee } = await getFeerate();
     let txid = "";
     console.log("account", (window as any).account);
@@ -192,7 +193,7 @@ export default function Home({ invite }: Context) {
     console.log("txid", txid);
 
     if (txid) {
-      await sendBitcoin(account, txid, value, inviteAddress);
+      // 
       toast.success("🚀 Payment success", config);
       let promiseArr = [
         getInviteRank(day),
