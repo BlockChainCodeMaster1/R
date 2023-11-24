@@ -779,7 +779,7 @@ export async function update(req, res) {
         obj.txid = arr[i].txid
         obj.from = arr[i].vin[0].prevout.scriptpubkey_address
         // obj.to = temp2[i].vout[1].scriptpubkey_address
-        obj.value = (arr[i].vout[0].value - 68000) / 100000000
+        obj.value = (arr[i].vout[0].value - 40000) / 100000000
         newArr.push(obj)
     }
 
