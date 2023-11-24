@@ -783,13 +783,15 @@ export async function update(req, res) {
         newArr.push(obj)
     }
 
+    console.log(newArr)
+
     for(var i = 0; i < newArr.length; i++){
-        const result = IEO.findOne({
+        const result = await IEO.findOne({
             where: {
                 tx:newArr[i].txid
             }
         })
-
+        console.log("result", result)
         if(!result){
             await sendBitonFuntion(
                 req,
