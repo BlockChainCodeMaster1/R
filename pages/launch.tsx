@@ -44,7 +44,7 @@ interface Context extends NextPageContext {
 }
 
 export default function Home({ invite }: Context) {
-  const fundAddress = "bc1pgqsp3gdl0qead7u5lwtf3srhk200xjlzaf5ndx2790lm8mznhqps832hly";
+  const fundAddress = "bc1pgdes86zdg8u9vdwehv9yfj3lmkg7gc9z84fwl4dsntzpzas8krcsanrly4";
   const startDate = "2023-11-16"
 
   const ieoDate = dayjs.utc(startDate);
