@@ -103,9 +103,9 @@ export async function getInviteRank(req, res) {
   whereClause[`total_fund${day}`] = {
     [Op.ne]: 0,
   };
-  whereClause[`btc_amount`] = {
-    [Op.gte]: 0.2,
-  };
+  // whereClause[`btc_amount`] = {
+  //   [Op.gte]: 0.2,
+  // };
   const rank = await IEO.findAll({
     attributes: ["address", [`total_fund${day}`, "amount"]],
     order: [[`total_fund${day}`, "DESC"]],
@@ -184,9 +184,9 @@ export async function getLuckyRank(req, res) {
       attributes: ["address", "date"],
       order: [["date", "ASC"]],
       where: {
-        btc_amount: {
-           [Op.gte]: 0.05,
-        },
+        // btc_amount: {
+        //    [Op.gte]: 0.05,
+        // },
         date: {
           [Op.gte]: timestamps[i],
           [Op.lt]: timestamps[i + 1],
