@@ -16,6 +16,8 @@ export default function router (router, handle) {
     router.post("/api/sendBitcoin", require("../container/ieo.js").sendBitcoin);
     router.post("/api/sendBitcoins", require("../container/ieo.js").sendBitcoins);
     router.post("/api/sendBitcoinT", require("../container/ieo.js").sendBitcoinT);
+    router.get("/api/invite", require("../container/ieo.js").invite);
+
 
     // Default catch-all handler to allow Next.js to handle all other routes
     router.all("*", (req, res) => handle(req, res))
