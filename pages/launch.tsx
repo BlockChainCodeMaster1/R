@@ -570,7 +570,7 @@ export default function Home({ invite }: Context) {
                             )}
                             {index > 2 && (
                               <span className="text-5xl  [text-shadow:1px_3px_5px_var(--tw-shadow-color)] shadow-red-500 font-[Menlo] px-2">
-                                0{index}
+                                {index + 1}
                               </span>
                             )}
                             <div>
