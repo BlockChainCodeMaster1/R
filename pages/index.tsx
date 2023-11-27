@@ -79,21 +79,11 @@ export default function Home() {
                   REVS Resonance V Pool Mechanism Introduction
                 </h1>
                 <p className=" text-xs py-6 leading-5">
-                  A. The Resonance V pool is an inverted triangle with 3,000
-                  layers, consisting of an unlimited number of layers with
-                  different ratios.
-                  <br />
-                  B. Each layer in the pool has a base exchange capacity of
-                  2BTC.
-                  <br />
-                  C. The bottom layer of the inverted triangle is the first
-                  layer of the Resonance V pool, and the exchange ratio of this
-                  layer is 1:10.
-                  <br />
-                  D. Depending on the number of tokens in the Resonance V pool
-                  and the BTC exchange limit, the ratio of BTC to tokens will
-                  increase by 10 units for each higher layer. increases by 10
-                  units{" "}
+                  A. The Fusion V Pool is in the shape of an inverted triangle and consists of different proportions of tiers.
+   <br />
+B. The initial stage of the Fusion V Pool has a base exchange capacity of 2 BTC, and the exchange capacity increases by 0.1 BTC after every 50 layers of fusion.
+  <br />
+C. Based on the number of tokens in the Fusion V pool and the exchange limitation of BTC, each layer increases and the capacity of each layer of REVS decreases by 20 tokens.
                 </p>
               </div>
             </div>
