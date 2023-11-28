@@ -321,7 +321,7 @@ export default function Home({ invite }: Context) {
             </li>
           </ul>
         </div>
-        <div className="sm-11/12 sm:w-8/12 mx-auto flex gap-4 sm:flex-row flex-col">
+        <div className="w-11/12 sm:w-8/12 mx-auto flex gap-4 sm:flex-row flex-col">
           <div className="w-10/12 mx-auto sm:w-6/12 ">
             <div className=" bg-[url('/ieo_border.png')] bg-no-repeat bg-[length:100%_100%] px-8 sm:px-6 py-8 ">
               <ul className=" sm:text-left flex gap-8 sm:flex-row flex-col  text-center">
@@ -670,6 +670,27 @@ export default function Home({ invite }: Context) {
               )}
             </div>
           </div>
+        </div>
+
+            <div className="w-11/12 sm:w-8/12 mx-auto bg-[url('/ieo_border.png')] bg-no-repeat bg-[length:100%_100%] px-8 sm:px-6 py-8 mt-4">
+              <div className="flex text-left">
+              <div className=" border-red-600 border-r-2  px-4">
+                <h1 className=" text-[#ff0000] text-xl  mt-2">Reward Mechanism: </h1>
+                <p>Users use the invitation link for new users to participate in Entropy Fusion, and the inviter gets 10% of the tokens rewarded to.</p>
+                <h1 className=" text-[#ff0000] text-xl  mt-2">Invitation Note: </h1>
+                <p>There is only one level of invitation, and the binding relationship will be based on the invitation link used for the first time to participate in Entropy Fusion.</p>
+              </div>
+              <div className=" px-4">
+                <h1 className=" text-[#ff0000] text-xl mt-2">Top10 rules and share: </h1>
+                <p>based on inviting the wireless subset to contribute the most points ranking (user input should be ≥0.1BTC).</p>
+                <h1 className=" text-[#ff0000] text-xl mt-2">Lucky12 rule: </h1>
+                <p>2% equal share, the nearest 1 user who donates at every 2 hours 0s is rewarded, 12 places in total (user input has to be ≥0.05BTC)</p>
+              </div>
+              </div>
+              <div className=" text-left px-4">
+                <h1 className=" text-[#ff0000] text-xl">Top 10 and lucky 12 competition system:</h1>
+                <p>Top 10 and Lucky 12: 10% of the daily entropy fusion new funds will be used to distribute to the top 10 and lucky 12, of which the top 10 accounts for 8% and lucky accounts for 2%.</p>
+              </div>
         </div>
       </main>
     </HeaderFooter>
