@@ -216,6 +216,52 @@ export default function Home({ invite }: Context) {
     setValue(value);
   };
 
+  const getExchangeRatio = (btc_amount:number)=>{
+        let ladder = [
+        100, 
+        100 + 105, 
+        100 + 105 + 110,
+        100 + 105 + 110 + 115,
+        100 + 105 + 110 + 115 + 120,
+        100 + 105 + 110 + 115 + 120 + 125,
+        100 + 105 + 110 + 115 + 120 + 125 + 130,
+        100 + 105 + 110 + 115 + 120 + 125 + 130 + 135,
+        100 + 105 + 110 + 115 + 120 + 125 + 130 + 135 + 140,
+        100 + 105 + 110 + 115 + 120 + 125 + 130 + 135 + 140 + 145,
+    ]
+
+    let cardinal = 2;
+
+    if(Number(btc_amount) > ladder[0]){
+      cardinal = 2.1;
+    }
+    if(Number(btc_amount) > ladder[1]){
+      cardinal = 2.2;
+    }
+    if(Number(btc_amount) > ladder[2]){
+      cardinal = 2.3;
+    }
+    if(Number(btc_amount) > ladder[3]){
+      cardinal = 2.4;
+    }
+    if(Number(btc_amount) > ladder[4]){
+      cardinal = 2.5;
+    }
+    if(Number(btc_amount) > ladder[5]){
+      cardinal = 2.6;
+    }
+    if(Number(btc_amount) > ladder[6]){
+      cardinal = 2.7;
+    }
+    if(Number(btc_amount) > ladder[7]){
+      cardinal = 2.8;
+    }
+    if(Number(btc_amount) > ladder[8]){
+      cardinal = 2.9;
+    }
+    return cardinal;
+  }
+
   return (
     <HeaderFooter>
       {showMyDataList && (
@@ -330,8 +376,8 @@ export default function Home({ invite }: Context) {
                   {/* <h1>Every Floor include 2 <span className=" text-[#ff7700] text-base">₿</span></h1> */}
                   <p className=" text-2xl pb-4">
                     1 <span className=" text-[#ff7700] text-base">₿</span> ={" "}
-                    {30000 - Math.floor(totalData.btc_amount / 2) * 10 > 0
-                      ? 30000 - Math.floor(totalData.btc_amount / 2) * 10
+                    {30000 - Math.floor(totalData.btc_amount / getExchangeRatio(totalData.btc_amount)) * 10 > 0
+                      ? 30000 - Math.floor(totalData.btc_amount / getExchangeRatio(totalData.btc_amount)) * 10
                       : 0}{" "}
                     <span className=" text-[#ff0000] text-base">REVS</span>
                   </p>
