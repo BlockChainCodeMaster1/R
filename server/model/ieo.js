@@ -59,6 +59,34 @@ export default function (sequelize, DataTypes) {
       type: DataTypes.FLOAT,
       defaultValue: 0
     },
+    total_fund11: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0
+    },
+    total_fund12: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0
+    },
+    total_fund13: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0
+    },
+    total_fund14: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0
+    },
+    total_fund15: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0
+    },
+    total_fund16: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0
+    },
+    total_fund17: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0
+    },
   })
   IEO.sync();
   return IEO;
