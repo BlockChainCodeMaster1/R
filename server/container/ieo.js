@@ -321,6 +321,10 @@ export async function getFloorDataByAddress(req, res) {
     attributes: ["address", "btc_amount", "token_amount", "date"],
     where: {
       address: address,
+      btc_amount: {
+        [Op.ne]:
+          "0",
+      },
     },
   });
 
@@ -355,6 +359,10 @@ export async function getInviteDataByAddress(req, res) {
     attributes: ["address", "btc_amount", "token_amount", "date"],
     where: {
       invite_address: address,
+      btc_amount: {
+        [Op.ne]:
+          "0",
+      },
     },
   });
 

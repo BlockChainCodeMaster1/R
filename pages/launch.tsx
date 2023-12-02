@@ -78,11 +78,13 @@ export default function Home({ invite }: Context) {
   const [luckyDay, setLuckyDay] = useState(day);
   const [luckReward, setLuckyRward] = useState(day);
 
+
   const formatAddress = (address: string) => {
     return (
       address.substr(0, 8) + "......" + address.substr(address.length - 8, 8)
     );
   };
+  
 
   const getInitData = async () => {
     let promiseArr = [
@@ -114,6 +116,8 @@ export default function Home({ invite }: Context) {
             ? (window as any).account.okx
             : (window as any).account.tp
         );
+
+
       if (!!account) {
         let promiseArr = [getDataByAddress(account), getBalance(account)];
         const data = await Promise.all(promiseArr);
@@ -265,7 +269,7 @@ export default function Home({ invite }: Context) {
   return (
     <HeaderFooter>
       {showMyDataList && (
-        <div className=" fixed border border-[#ff0000] z-30 w-4/12 p-4 bg-black bg-opacity-90 left-1/2 top-1/2 -ml-60 -mt-48 min-h-[20rem] overflow-auto">
+        <div className=" fixed border border-[#ff0000] z-30 w-4/12 p-4 bg-black bg-opacity-90 left-1/2 top-1/2 -ml-60 -mt-48 max-h-[20rem] overflow-auto">
           <h1 className=" text-center text-[#ff0000] flex justify-between pb-4">
             <span>View your own data</span>
             <span
@@ -299,7 +303,7 @@ export default function Home({ invite }: Context) {
         </div>
       )}
       {showMyInviteDataList && (
-        <div className=" fixed border border-[#ff0000] z-30 w-4/12 p-4 bg-black bg-opacity-90 left-1/2 top-1/2 -ml-60 -mt-48 min-h-[20rem] overflow-auto">
+        <div className=" fixed border border-[#ff0000] z-30 w-4/12 p-4 bg-black bg-opacity-90 left-1/2 top-1/2 -ml-60 -mt-48 max-h-[20rem] overflow-auto">
           <h1 className=" text-center text-[#ff0000] flex justify-between pb-4">
             <span>View your invite data</span>
             <span
