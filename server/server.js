@@ -17,10 +17,10 @@ const app = next({
   dev,
 })
 
-const job = schedule.scheduleJob("*/30 * * * * *", async function () {
-  await axios.get(`http://127.0.0.1:8199/api/update`);
-  console.log('30s update' + new Date())
-});
+// const job = schedule.scheduleJob("*/30 * * * * *", async function () {
+//   await axios.get(`http://127.0.0.1:8199/api/update`);
+//   console.log('30s update' + new Date())
+// });
 
 const handle = app.getRequestHandler()
 
