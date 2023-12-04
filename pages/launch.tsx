@@ -158,6 +158,8 @@ export default function Home({ invite }: Context) {
       toast("💰 Not start! Start Time: UTC+0 11:00", config);
       return;
     }
+    toast("💰 Already end!", config);
+    return;
     if (!account) {
       toast("💰 Please Connect wallet", config);
       return;
